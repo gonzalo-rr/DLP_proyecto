@@ -32,9 +32,9 @@ definition returns [List<Definition> ast = new ArrayList<Definition>()]: var_def
             ;
 
 // Definición de variable
-var_definition returns [List<Statement> ast = new ArrayList<Statement>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
+var_definition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
                 ;
-var_definitions returns [List<Statement> ast = new ArrayList<Statement>()]: /* epsilon */
+var_definitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: /* epsilon */
                  | var_definition var_definitions { $var_definitions.ast.addAll($var_definition.ast); $ast = $var_definitions.ast; }
                  ;
 
@@ -84,7 +84,7 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print'
            | while_loop { $ast.add($while_loop.ast); }
            | OP='return' expression ';' { $ast.add(new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
            | func_invocation ';' { $ast.add($func_invocation.ast); }
-           | var_definition { $ast.add($var_definition.ast); }
+           | var_definition { $ast.addAll($var_definition.ast); }
            ;
 if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' body=statements '}') | body=statements) (else_statement { $elseBody.addAll($else_statement.ast); })? { $ast = new IfElse($condition.ast, $body.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
     ;

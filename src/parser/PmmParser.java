@@ -345,7 +345,7 @@ public class PmmParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Var_definitionContext extends ParserRuleContext {
-		public List<Statement> ast = new ArrayList<Statement>();
+		public List<VarDefinition> ast = new ArrayList<VarDefinition>();
 		public IdsContext ids;
 		public TypeContext type;
 		public IdsContext ids() {
@@ -395,7 +395,7 @@ public class PmmParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class Var_definitionsContext extends ParserRuleContext {
-		public List<Statement> ast = new ArrayList<Statement>();
+		public List<VarDefinition> ast = new ArrayList<VarDefinition>();
 		public Var_definitionContext var_definition;
 		public Var_definitionsContext var_definitions;
 		public Var_definitionContext var_definition() {
@@ -1308,7 +1308,7 @@ public class PmmParser extends Parser {
 				{
 				setState(226);
 				((StatementContext)_localctx).var_definition = var_definition();
-				 _localctx.ast.add(((StatementContext)_localctx).var_definition.ast); 
+				 _localctx.ast.addAll(((StatementContext)_localctx).var_definition.ast); 
 				}
 				break;
 			}
