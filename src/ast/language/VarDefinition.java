@@ -1,6 +1,6 @@
 package ast.language;
 
-public class VarDefinition extends AbstractNode implements Definition {
+public class VarDefinition extends AbstractNode implements Definition, Statement {
 
     public String name;
     public Type type;

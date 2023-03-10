@@ -23,7 +23,7 @@ program returns [Program ast] locals [List<Definition> defs = new ArrayList<Defi
 definitions returns [List<Definition> ast = new ArrayList<Definition>()]: /* epsilon */
              | definition definitions { $definitions.ast.addAll($definition.ast); $ast = $definitions.ast; }
              ;
-main returns [FuncDefinition ast]: OP='def' NAME='main' '(' ')' ':' '{' var_definitions statements '}' { $ast = new FuncDefinition($NAME.text, VoidType.getInstance(), $var_definitions.ast, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+main returns [FuncDefinition ast]: OP='def' NAME='main' '(' ')' ':' '{' statements '}' { $ast = new FuncDefinition($NAME.text, VoidType.getInstance(), $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
       ;
 
 // Definiciones
@@ -32,19 +32,19 @@ definition returns [List<Definition> ast = new ArrayList<Definition>()]: var_def
             ;
 
 // Definición de variable
-var_definition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
+var_definition returns [List<Statement> ast = new ArrayList<Statement>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
                 ;
-var_definitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: /* epsilon */
+var_definitions returns [List<Statement> ast = new ArrayList<Statement>()]: /* epsilon */
                  | var_definition var_definitions { $var_definitions.ast.addAll($var_definition.ast); $ast = $var_definitions.ast; }
                  ;
 
 // Definición de funciones
-func_definition returns [FuncDefinition ast] locals [Type t = VoidType.getInstance()]: OP='def' ID '(' func_params ')' ':' ((type) { $t = $type.ast; })? '{' var_definitions statements '}' { $ast = new FuncDefinition($ID.text, $t, $var_definitions.ast, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+func_definition returns [FuncDefinition ast] locals [Type t = VoidType.getInstance()]: OP='def' ID '(' func_params ')' ':' ((type) { $t = $type.ast; })? '{' statements '}' { $ast = new FuncDefinition($ID.text, $t, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
                  ;
-func_params returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: params { $ast = $params.ast; }
+func_params returns [List<Statement> ast = new ArrayList<Statement>()]: params { $ast = $params.ast; }
         | /* epsilon */
         ;
-params returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: param { $ast.add($param.ast); }
+params returns [List<Statement> ast = new ArrayList<Statement>()]: param { $ast.add($param.ast); }
         | param ',' params { $params.ast.add($param.ast); $ast = $params.ast; }
         ;
 param returns [VarDefinition ast]: ID ':' simple_type { $ast = new VarDefinition($ID.text, $simple_type.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
@@ -84,6 +84,7 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print'
            | while_loop { $ast.add($while_loop.ast); }
            | OP='return' expression ';' { $ast.add(new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
            | func_invocation ';' { $ast.add($func_invocation.ast); }
+           | var_definition { $ast.add($var_definition.ast); }
            ;
 if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' body=statements '}') | body=statements) (else_statement { $elseBody.addAll($else_statement.ast); })? { $ast = new IfElse($condition.ast, $body.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
     ;
