@@ -20,4 +20,5 @@ public class VarDefinition extends AbstractNode implements Definition, Statement
     public String getName() {
         return name;
     }
+
 }

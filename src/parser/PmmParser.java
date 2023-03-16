@@ -5,6 +5,7 @@ package parser;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;
+    import ast.errors.*;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -995,7 +996,7 @@ public class PmmParser extends Parser {
 				((RegistersContext)_localctx).register = register();
 				setState(170);
 				((RegistersContext)_localctx).registers = registers();
-				 ((RegistersContext)_localctx).registers.ast.addAll(0, ((RegistersContext)_localctx).register.ast); ((RegistersContext)_localctx).ast =  ((RegistersContext)_localctx).registers.ast; 
+				 if (((RegistersContext)_localctx).registers.ast.stream().anyMatch(field -> ((RegistersContext)_localctx).register.ast.stream().anyMatch(field2 -> field.name.equals(field2.name)))) { new ErrorType("Duplicated field", ((RegistersContext)_localctx).register.ast.get(0).getLine(), ((RegistersContext)_localctx).register.ast.get(0).getColumn()); } else { ((RegistersContext)_localctx).registers.ast.addAll(0, ((RegistersContext)_localctx).register.ast); ((RegistersContext)_localctx).ast =  ((RegistersContext)_localctx).registers.ast; } 
 				}
 				break;
 			default:
@@ -2088,7 +2089,7 @@ public class PmmParser extends Parser {
 				{
 				setState(367);
 				((IdsContext)_localctx).ID = match(ID);
-				 _localctx.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); 
+				 if (_localctx.ast.stream().anyMatch(variable -> variable.name.equals((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null)))) { new ErrorType("Duplicated identifier", ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1); } else { _localctx.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); } 
 				}
 				break;
 			case 2:
@@ -2100,7 +2101,7 @@ public class PmmParser extends Parser {
 				match(T__8);
 				setState(371);
 				((IdsContext)_localctx).ids = ids();
-				 ((IdsContext)_localctx).ids.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); ((IdsContext)_localctx).ast =  ((IdsContext)_localctx).ids.ast; 
+				 if (((IdsContext)_localctx).ids.ast.stream().anyMatch(variable -> variable.name.equals((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null)))) { new ErrorType("Duplicated identifier", ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1); } else { ((IdsContext)_localctx).ids.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); } ((IdsContext)_localctx).ast =  ((IdsContext)_localctx).ids.ast; 
 				}
 				break;
 			}

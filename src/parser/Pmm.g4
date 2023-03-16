@@ -5,6 +5,7 @@ grammar Pmm;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;
+    import ast.errors.*;
 }
 
 // Análisis Sintáctico
@@ -64,7 +65,7 @@ dimension returns [int ast]: '[' INT_CONSTANT ']' { $ast = LexerHelper.lexemeToI
 struct_type returns [StructType ast]: OP='struct' '{' registers '}' { $ast = new StructType($registers.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
              ;
 registers returns [List<RecordField> ast = new ArrayList<RecordField>()]: /* epsilon */
-           | register registers { $registers.ast.addAll(0, $register.ast); $ast = $registers.ast; }
+           | register registers { if ($registers.ast.stream().anyMatch(field -> $register.ast.stream().anyMatch(field2 -> field.name.equals(field2.name)))) { new ErrorType("Duplicated field", $register.ast.get(0).getLine(), $register.ast.get(0).getColumn()); } else { $registers.ast.addAll(0, $register.ast); $ast = $registers.ast; } }
            ;
 register returns [List<RecordField> ast = new ArrayList<RecordField>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new RecordField(id.name, $type.ast, id.getLine(), id.getColumn()))); }
           ;
@@ -119,8 +120,8 @@ expression returns [Expression ast]: func_invocation { $ast = $func_invocation.a
             | left=expression OP='||' right=expression { $ast = new Logical($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | ID { $ast = new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
             ;
-ids returns [List<Var> ast = new ArrayList<Var>()]: ID { $ast.add(0, new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); }
-     | ID ',' ids { $ids.ast.add(0, new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); $ast = $ids.ast; }
+ids returns [List<Var> ast = new ArrayList<Var>()]: ID { if ($ast.stream().anyMatch(variable -> variable.name.equals($ID.text))) { new ErrorType("Duplicated identifier", $ID.getLine(), $ID.getCharPositionInLine() + 1); } else { $ast.add(0, new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); } }
+     | ID ',' ids { if ($ids.ast.stream().anyMatch(variable -> variable.name.equals($ID.text))) { new ErrorType("Duplicated identifier", $ID.getLine(), $ID.getCharPositionInLine() + 1); } else { $ids.ast.add(0, new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); } $ast = $ids.ast; }
      ;
 
 

@@ -5,6 +5,7 @@ package parser;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;
+    import ast.errors.*;
 
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
