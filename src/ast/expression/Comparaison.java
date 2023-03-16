@@ -6,12 +6,14 @@ import ast.language.Expression;
 public class Comparaison extends AbstractNode implements Expression {
 
     public String operation;
-    public Expression operatorLeft;
-    public Expression operatorRight;
+    public Expression left;
+    public Expression right;
 
-    public Comparaison(int line, int column, String operation) {
+    public Comparaison(Expression left, String operation, Expression right, int line, int column) {
         super(line, column);
+        this.left = left;
         this.operation = operation;
+        this.right =right;
     }
 
 }

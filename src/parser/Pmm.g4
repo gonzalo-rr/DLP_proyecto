@@ -18,12 +18,12 @@ grammar Pmm;
 
 // Programa
 
-program returns [Program ast] locals [List<Definition> defs = new ArrayList<Definition>()]: definitions main EOF { $defs.addAll($definitions.ast); $defs.add($main.ast); $ast = new Program($defs, 1, 1); }
+program returns [Program ast] locals [List<Definition> defs = new ArrayList<Definition>()]: definitions main EOF { $defs = $definitions.ast; $defs.add($main.ast); $ast = new Program($defs, 1, 1); }
          ;
 definitions returns [List<Definition> ast = new ArrayList<Definition>()]: /* epsilon */
-             | definition definitions { $definitions.ast.addAll($definition.ast); $ast = $definitions.ast; }
+             | definition definitions { $definitions.ast.addAll(0, $definition.ast); $ast = $definitions.ast; }
              ;
-main returns [FuncDefinition ast]: OP='def' NAME='main' '(' ')' ':' '{' statements '}' { $ast = new FuncDefinition($NAME.text, VoidType.getInstance(), $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+main returns [FuncDefinition ast]: OP='def' NAME='main' '(' ')' ':' '{' statements '}' { $ast = new FuncDefinition($NAME.text, new FunctionType(new ArrayList<VarDefinition>(), VoidType.getInstance(), $NAME.getLine(), $NAME.getCharPositionInLine() + 1), $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
       ;
 
 // Definiciones
@@ -32,20 +32,21 @@ definition returns [List<Definition> ast = new ArrayList<Definition>()]: var_def
             ;
 
 // Definición de variable
+var_definitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: /* epsilon */
+                 | var_definition var_definitions { $var_definitions.ast.addAll(0, $var_definition.ast); $ast = $var_definitions.ast; }
+                 ;
 var_definition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
                 ;
-var_definitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: /* epsilon */
-                 | var_definition var_definitions { $var_definitions.ast.addAll($var_definition.ast); $ast = $var_definitions.ast; }
-                 ;
 
 // Definición de funciones
-func_definition returns [FuncDefinition ast] locals [Type t = VoidType.getInstance()]: OP='def' ID '(' func_params ')' ':' ((type) { $t = $type.ast; })? '{' statements '}' { $ast = new FuncDefinition($ID.text, $t, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+func_definition returns [FuncDefinition ast] locals [FunctionType functionType]: OP='def' ID '(' func_params ')' ':' ((type) { $functionType = new FunctionType($func_params.ast, $type.ast, $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getLine(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getCharPositionInLine() + 1); })?
+({ $functionType = new FunctionType($func_params.ast, VoidType.getInstance(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getLine(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getCharPositionInLine() + 1); }) '{' statements '}' { $ast = new FuncDefinition($ID.text, $functionType, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
                  ;
-func_params returns [List<Statement> ast = new ArrayList<Statement>()]: params { $ast = $params.ast; }
+func_params returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: params { $ast = $params.ast; }
         | /* epsilon */
         ;
-params returns [List<Statement> ast = new ArrayList<Statement>()]: param { $ast.add($param.ast); }
-        | param ',' params { $params.ast.add($param.ast); $ast = $params.ast; }
+params returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: param { $ast.add(0, $param.ast); }
+        | param ',' params { $params.ast.add(0, $param.ast); $ast = $params.ast; }
         ;
 param returns [VarDefinition ast]: ID ':' simple_type { $ast = new VarDefinition($ID.text, $simple_type.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
         ;
@@ -63,7 +64,7 @@ dimension returns [int ast]: '[' INT_CONSTANT ']' { $ast = LexerHelper.lexemeToI
 struct_type returns [StructType ast]: OP='struct' '{' registers '}' { $ast = new StructType($registers.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
              ;
 registers returns [List<RecordField> ast = new ArrayList<RecordField>()]: /* epsilon */
-           | register registers { $registers.ast.addAll($register.ast); $ast = $registers.ast; }
+           | register registers { $registers.ast.addAll(0, $register.ast); $ast = $registers.ast; }
            ;
 register returns [List<RecordField> ast = new ArrayList<RecordField>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new RecordField(id.name, $type.ast, id.getLine(), id.getColumn()))); }
           ;
@@ -74,17 +75,17 @@ simple_type returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
 
 // Sentencias
 statements returns [List<Statement> ast = new ArrayList<Statement>()]: /* epsilon */
-            | statement statements { $statements.ast.addAll($statement.ast); $ast = $statements.ast; }
+            | statement statements { $statements.ast.addAll(0, $statement.ast); $ast = $statements.ast; }
             ;
 
 statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print' separated_expressions ';' { $separated_expressions.ast.stream().forEach((expression) -> $ast.add(new Print(expression, $OP.getLine(), $OP.getCharPositionInLine() + 1))); }
            | OP='input' separated_expressions ';' { $separated_expressions.ast.stream().forEach((expression) -> $ast.add(new Input(expression, $OP.getLine(), $OP.getCharPositionInLine() + 1))); }
-           | left=expression '=' right=expression ';' { $ast.add(new Assignment($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn())); }
-           | if_else { $ast.add($if_else.ast); }
-           | while_loop { $ast.add($while_loop.ast); }
-           | OP='return' expression ';' { $ast.add(new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
-           | func_invocation ';' { $ast.add($func_invocation.ast); }
-           | var_definition { $ast.addAll($var_definition.ast); }
+           | left=expression '=' right=expression ';' { $ast.add(0, new Assignment($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn())); }
+           | if_else { $ast.add(0, $if_else.ast); }
+           | while_loop { $ast.add(0, $while_loop.ast); }
+           | OP='return' expression ';' { $ast.add(0, new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
+           | func_invocation ';' { $ast.add(0, $func_invocation.ast); }
+           | var_definition { $ast.addAll(0, $var_definition.ast); }
            ;
 if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' body=statements '}') | body=statements) (else_statement { $elseBody.addAll($else_statement.ast); })? { $ast = new IfElse($condition.ast, $body.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
     ;
@@ -98,8 +99,8 @@ func_invocation returns [FunctionInvocation ast]: ID '(' arguments ')' { $ast = 
 arguments returns [List<Expression> ast = new ArrayList<Expression>()]: /* epsilon */
     | separated_expressions { $ast = $separated_expressions.ast; };
 
-separated_expressions returns [List<Expression> ast = new ArrayList<Expression>()]: expression { $ast.add($expression.ast); }
-                       | expression ',' separated_expressions { $separated_expressions.ast.add($expression.ast); $ast = $separated_expressions.ast; }
+separated_expressions returns [List<Expression> ast = new ArrayList<Expression>()]: expression { $ast.add(0, $expression.ast); }
+                       | expression ',' separated_expressions { $separated_expressions.ast.add(0, $expression.ast); $ast = $separated_expressions.ast; }
                        ;
 expression returns [Expression ast]: func_invocation { $ast = $func_invocation.ast; }
             | INT_CONSTANT { $ast = new LitInt($INT_CONSTANT.getLine(), $INT_CONSTANT.getCharPositionInLine() + 1, LexerHelper.lexemeToInt($INT_CONSTANT.text)); }
@@ -113,13 +114,13 @@ expression returns [Expression ast]: func_invocation { $ast = $func_invocation.a
             | OP='!' left=expression { $ast = new Not($left.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
             | left=expression OP=('*' | '/' | '%') right=expression { $ast = new Arithmetic($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | left=expression OP=('+' | '-') right=expression { $ast = new Arithmetic($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
-            | left=expression OP=('>' | '>=' | '<' | '<=' | '!=' | '==') right=expression { $ast = new Logical($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
+            | left=expression OP=('>' | '>=' | '<' | '<=' | '!=' | '==') right=expression { $ast = new Comparaison($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | left=expression OP='&&' right=expression { $ast = new Logical($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | left=expression OP='||' right=expression { $ast = new Logical($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | ID { $ast = new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
             ;
-ids returns [List<Var> ast = new ArrayList<Var>()]: ID { $ast.add(new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); }
-     | ID ',' ids { $ids.ast.add(new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); $ast = $ids.ast; }
+ids returns [List<Var> ast = new ArrayList<Var>()]: ID { $ast.add(0, new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); }
+     | ID ',' ids { $ids.ast.add(0, new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1)); $ast = $ids.ast; }
      ;
 
 

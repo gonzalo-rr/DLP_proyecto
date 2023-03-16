@@ -1,3 +1,4 @@
+import ast.language.ASTNode;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorView;
 import org.antlr.v4.runtime.*;
@@ -21,8 +22,7 @@ public class Main {
 		// create a parser that feeds off the tokens buffer
 		CommonTokenStream tokens = new CommonTokenStream(lexer); 
 		PmmParser parser = new PmmParser(tokens);	
-		//ASTNode ast = parser.program().ast; // Cambiar por el no terminal que se quiera
-		var ast = parser.program().ast;
+		ASTNode ast = parser.program().ast; // Cambiar por el no terminal que se quiera
 		
 		// * The AST is shown
 		IntrospectorModel model=new IntrospectorModel("Program", ast);

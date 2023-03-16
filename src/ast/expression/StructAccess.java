@@ -10,6 +10,8 @@ public class StructAccess extends AbstractNode implements Expression {
 
     public StructAccess(Expression struct, String id, int line, int column) {
         super(line, column);
+        this.struct = struct;
+        this.id = id;
     }
 
 }
