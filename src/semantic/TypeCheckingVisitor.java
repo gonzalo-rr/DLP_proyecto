@@ -176,18 +176,17 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
 
     @Override
     public Void visit(CharType charType, Void param) {
-        charType.accept(this, param);
         return null;
     }
 
     @Override
     public Void visit(DoubleType doubleType, Void param) {
-        doubleType.accept(this, param);
         return null;
     }
 
     @Override
     public Void visit(FunctionType functionType, Void param) {
+        functionType.paramsType.stream().forEach(varDefinition -> varDefinition.accept(this, param));
         return null;
     }
 
@@ -198,11 +197,13 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
 
     @Override
     public Void visit(RecordField recordField, Void param) {
+        recordField.type.accept(this, param);
         return null;
     }
 
     @Override
     public Void visit(StructType structType, Void param) {
+        structType.recordFieldList.stream().forEach(recordField -> recordField.accept(this, param));
         return null;
     }
 
