@@ -2,6 +2,7 @@ package ast.type;
 
 import ast.language.AbstractNode;
 import ast.language.Type;
+import visitor.Visitor;
 
 public class RecordField extends AbstractNode {
 
@@ -12,6 +13,11 @@ public class RecordField extends AbstractNode {
         super(line, column);
         this.name = name;
         this.type = type;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
     }
 
 }

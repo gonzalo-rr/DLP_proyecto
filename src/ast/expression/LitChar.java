@@ -2,14 +2,20 @@ package ast.expression;
 
 import ast.language.AbstractNode;
 import ast.language.Expression;
+import visitor.Visitor;
 
-public class LitChar extends AbstractNode implements Expression {
+public class LitChar extends AbstractExpression implements Expression {
 
     public char val;
 
     public LitChar(int line, int column, char val) {
         super(line, column);
         this.val = val;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
     }
 
 }

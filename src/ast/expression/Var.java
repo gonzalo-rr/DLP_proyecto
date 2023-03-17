@@ -3,8 +3,9 @@ package ast.expression;
 import ast.language.AbstractNode;
 import ast.language.Expression;
 import ast.language.VarDefinition;
+import visitor.Visitor;
 
-public class Var extends AbstractNode implements Expression {
+public class Var extends AbstractExpression implements Expression {
 
     public String name;
 
@@ -14,10 +15,8 @@ public class Var extends AbstractNode implements Expression {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj.getClass() != Var.class) return false;
-        if (!((Var) obj).name.equals(this.name)) return false;
-        return true;
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
     }
 
 }

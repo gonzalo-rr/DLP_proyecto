@@ -19,4 +19,5 @@ public abstract class AbstractNode implements ASTNode {
     public int getColumn() {
         return column;
     }
+
 }

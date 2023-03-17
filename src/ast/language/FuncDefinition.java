@@ -1,5 +1,7 @@
 package ast.language;
 
+import visitor.Visitor;
+
 import java.util.List;
 
 public class FuncDefinition extends AbstractNode implements Definition {
@@ -23,4 +25,8 @@ public class FuncDefinition extends AbstractNode implements Definition {
         return name;
     }
 
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
+    }
 }

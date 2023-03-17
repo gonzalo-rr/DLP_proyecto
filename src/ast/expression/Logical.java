@@ -2,8 +2,9 @@ package ast.expression;
 
 import ast.language.AbstractNode;
 import ast.language.Expression;
+import visitor.Visitor;
 
-public class Logical extends AbstractNode implements Expression {
+public class Logical extends AbstractExpression implements Expression {
 
     public String operation;
     public Expression left;
@@ -14,6 +15,11 @@ public class Logical extends AbstractNode implements Expression {
         this.left = left;
         this.operation = operation;
         this.right = right;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
     }
 
 }

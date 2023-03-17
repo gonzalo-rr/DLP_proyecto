@@ -2,6 +2,7 @@ package ast.errors;
 
 import ast.language.AbstractNode;
 import ast.language.Type;
+import errorhandler.ErrorHandler;
 
 public class ErrorType extends AbstractNode implements Type {
 

@@ -1,4 +1,9 @@
 package ast.language;
 
 public interface Expression extends ASTNode {
+
+    public boolean getLValue();
+
+    public void setLValue(boolean lValue);
+
 }

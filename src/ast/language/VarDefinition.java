@@ -1,5 +1,7 @@
 package ast.language;
 
+import visitor.Visitor;
+
 public class VarDefinition extends AbstractNode implements Definition, Statement {
 
     public String name;
@@ -21,4 +23,8 @@ public class VarDefinition extends AbstractNode implements Definition, Statement
         return name;
     }
 
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
+    }
 }

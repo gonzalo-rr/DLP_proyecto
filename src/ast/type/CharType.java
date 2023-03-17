@@ -2,6 +2,7 @@ package ast.type;
 
 import ast.language.AbstractNode;
 import ast.language.Type;
+import visitor.Visitor;
 
 public class CharType extends AbstractNode implements Type {
 
@@ -16,6 +17,11 @@ public class CharType extends AbstractNode implements Type {
             instance = new CharType(0, 0);
         }
         return instance;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
     }
 
 }
