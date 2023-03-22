@@ -1,5 +1,6 @@
 package ast.statement;
 
+import ast.expression.AbstractExpression;
 import ast.language.AbstractNode;
 import ast.language.Expression;
 import ast.language.Statement;
@@ -7,7 +8,7 @@ import visitor.Visitor;
 
 import java.util.List;
 
-public class FunctionInvocation extends AbstractNode implements Statement, Expression {
+public class FunctionInvocation extends AbstractExpression implements Statement, Expression {
 
     public String name;
     public List<Expression> arguments;

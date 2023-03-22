@@ -212,4 +212,10 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
         return null;
     }
 
+    @Override
+    public Void visit(ErrorType errorType, Void param) {
+        return null;
+    }
+
+
 }

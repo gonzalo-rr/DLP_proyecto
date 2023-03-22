@@ -1,5 +1,6 @@
 package visitor;
 
+import ast.errors.ErrorType;
 import ast.expression.*;
 import ast.language.FuncDefinition;
 import ast.language.Program;
@@ -72,5 +73,7 @@ public interface Visitor<TP, TR> {
     public TR visit(StructType structType, TP param);
 
     public TR visit(VoidType voidType, TP param);
+
+    public TR visit(ErrorType errorType, TP param);
 
 }

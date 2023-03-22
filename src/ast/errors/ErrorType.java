@@ -3,6 +3,7 @@ package ast.errors;
 import ast.language.AbstractNode;
 import ast.language.Type;
 import errorhandler.ErrorHandler;
+import visitor.Visitor;
 
 public class ErrorType extends AbstractNode implements Type {
 
@@ -28,6 +29,11 @@ public class ErrorType extends AbstractNode implements Type {
     @Override
     public int getColumn() {
         return 0;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
+        return visitor.visit(this, param);
     }
 
 }
