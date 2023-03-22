@@ -12,6 +12,8 @@ public class Cast extends AbstractExpression implements Expression {
 
     public Cast(Expression expression, Type type, int line, int column) {
         super(line, column);
+        this.expression = expression;
+        this.type = type;
     }
 
     @Override
