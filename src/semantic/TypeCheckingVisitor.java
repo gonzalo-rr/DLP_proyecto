@@ -105,7 +105,7 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
     @Override
     public Void visit(StructAccess structAccess, Void param) {
         structAccess.struct.accept(this, param);
-        structAccess.setLValue(false);
+        structAccess.setLValue(true);
         return null;
     }
 
@@ -121,7 +121,7 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
         assignment.left.accept(this, param);
         assignment.right.accept(this, param);
         if (!assignment.left.getLValue()) {
-            new ErrorType("Error: the left part of an assignment must be a Variable, Array Access or Struct Access line: " + assignment.left.getLine() + ", column: " + assignment.left.getColumn(), assignment.left.getLine(), assignment.left.getColumn());
+            new ErrorType("The left part of an assignment must be a Variable, Array Access or Struct Access", assignment.left.getLine(), assignment.left.getColumn());
         }
         return null;
     }
@@ -144,7 +144,7 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
     public Void visit(Input input, Void param) {
         input.expression.accept(this, param);
         if (!input.expression.getLValue()) {
-            new ErrorType("Error: the expression of an input must be a Variable, Array Access or Struct Access line: " + input.expression.getLine() + ", column: " + input.expression.getColumn(), input.expression.getLine(), input.expression.getColumn());
+            new ErrorType("The expression of an input must be a Variable, Array Access or Struct Access", input.expression.getLine(), input.expression.getColumn());
         }
         return null;
     }

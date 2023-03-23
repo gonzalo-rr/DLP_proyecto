@@ -2089,7 +2089,7 @@ public class PmmParser extends Parser {
 				{
 				setState(367);
 				((IdsContext)_localctx).ID = match(ID);
-				 if (_localctx.ast.stream().anyMatch(variable -> variable.name.equals((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null)))) { new ErrorType("Duplicated identifier", ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1); } else { _localctx.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); } 
+				 if (_localctx.ast.stream().anyMatch(variable -> variable.name.equals((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null)))) { new ErrorType("Duplicated identifier" + (((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1); } else { _localctx.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); } 
 				}
 				break;
 			case 2:
@@ -2101,7 +2101,7 @@ public class PmmParser extends Parser {
 				match(T__8);
 				setState(371);
 				((IdsContext)_localctx).ids = ids();
-				 if (((IdsContext)_localctx).ids.ast.stream().anyMatch(variable -> variable.name.equals((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null)))) { new ErrorType("Duplicated identifier", ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1); } else { ((IdsContext)_localctx).ids.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); } ((IdsContext)_localctx).ast =  ((IdsContext)_localctx).ids.ast; 
+				 if (((IdsContext)_localctx).ids.ast.stream().anyMatch(variable -> variable.name.equals((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null)))) { new ErrorType("Duplicated identifier " + (((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1); } else { ((IdsContext)_localctx).ids.ast.add(0, new Var((((IdsContext)_localctx).ID!=null?((IdsContext)_localctx).ID.getText():null), ((IdsContext)_localctx).ID.getLine(), ((IdsContext)_localctx).ID.getCharPositionInLine() + 1)); } ((IdsContext)_localctx).ast =  ((IdsContext)_localctx).ids.ast; 
 				}
 				break;
 			}

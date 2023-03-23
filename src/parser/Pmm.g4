@@ -5,6 +5,7 @@ grammar Pmm;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;
+    import ast.errors.*;
 }
 
 // Análisis Sintáctico

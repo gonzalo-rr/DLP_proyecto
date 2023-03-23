@@ -18,7 +18,7 @@ public class ErrorType extends AbstractNode implements Type {
 
     @Override
     public String toString() {
-        return "Error: " + message + ", line: " + this.getLine()  + " column: " + this.getColumn();
+        return "Error: " + message + ", line: " + super.getLine()  + " column: " + super.getColumn();
     }
 
     @Override
