@@ -1,7 +1,7 @@
 // Generated from java-escape by ANTLR 4.11.1
 package parser;
 
-    import ast.language.*;
+    import ast.*;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;

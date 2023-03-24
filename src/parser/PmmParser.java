@@ -1,7 +1,7 @@
 // Generated from java-escape by ANTLR 4.11.1
 package parser;
 
-    import ast.language.*;
+    import ast.*;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;
@@ -1626,7 +1626,7 @@ public class PmmParser extends Parser {
 			((Func_invocationContext)_localctx).arguments = arguments();
 			setState(275);
 			match(T__3);
-			 ((Func_invocationContext)_localctx).ast =  new FunctionInvocation((((Func_invocationContext)_localctx).ID!=null?((Func_invocationContext)_localctx).ID.getText():null), ((Func_invocationContext)_localctx).arguments.ast, ((Func_invocationContext)_localctx).ID.getLine(), ((Func_invocationContext)_localctx).ID.getCharPositionInLine() + 1); 
+			 ((Func_invocationContext)_localctx).ast =  new FunctionInvocation(new Var((((Func_invocationContext)_localctx).ID!=null?((Func_invocationContext)_localctx).ID.getText():null), ((Func_invocationContext)_localctx).ID.getLine(), ((Func_invocationContext)_localctx).ID.getCharPositionInLine() + 1), ((Func_invocationContext)_localctx).arguments.ast, ((Func_invocationContext)_localctx).ID.getLine(), ((Func_invocationContext)_localctx).ID.getCharPositionInLine() + 1); 
 			}
 		}
 		catch (RecognitionException re) {

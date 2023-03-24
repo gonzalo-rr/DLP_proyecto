@@ -1,4 +1,4 @@
-package ast.language;
+package ast;
 
 import visitor.Visitor;
 
@@ -8,6 +8,7 @@ public class FuncDefinition extends AbstractNode implements Definition {
 
     private String name;
     private Type functionType;
+    private int scope;
     public List<Statement> statements;
 
     public FuncDefinition(String name, Type functionType, List<Statement> statements, int line, int column) {
@@ -23,6 +24,16 @@ public class FuncDefinition extends AbstractNode implements Definition {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int getScope() {
+        return scope;
+    }
+
+    @Override
+    public void setScope(int scope) {
+        this.scope = scope;
     }
 
     @Override

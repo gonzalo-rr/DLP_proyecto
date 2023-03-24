@@ -1,8 +1,8 @@
 package ast.statement;
 
-import ast.language.AbstractNode;
-import ast.language.Expression;
-import ast.language.Statement;
+import ast.AbstractNode;
+import ast.Expression;
+import ast.Statement;
 import visitor.Visitor;
 
 import java.util.List;

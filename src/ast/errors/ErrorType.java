@@ -1,7 +1,7 @@
 package ast.errors;
 
-import ast.language.AbstractNode;
-import ast.language.Type;
+import ast.AbstractNode;
+import ast.Type;
 import errorhandler.ErrorHandler;
 import visitor.Visitor;
 

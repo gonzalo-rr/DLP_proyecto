@@ -1,4 +1,4 @@
-package ast.language;
+package ast;
 
 public abstract class AbstractNode implements ASTNode {
 

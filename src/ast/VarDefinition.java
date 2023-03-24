@@ -1,4 +1,4 @@
-package ast.language;
+package ast;
 
 import visitor.Visitor;
 
@@ -6,6 +6,7 @@ public class VarDefinition extends AbstractNode implements Definition, Statement
 
     public String name;
     public Type type;
+    private int scope;
 
     public VarDefinition(String name, Type type, int line, int column) {
         super(line, column);
@@ -21,6 +22,16 @@ public class VarDefinition extends AbstractNode implements Definition, Statement
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public int getScope() {
+        return scope;
+    }
+
+    @Override
+    public void setScope(int scope) {
+        this.scope = scope;
     }
 
     @Override

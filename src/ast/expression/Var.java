@@ -1,13 +1,13 @@
 package ast.expression;
 
-import ast.language.AbstractNode;
-import ast.language.Expression;
-import ast.language.VarDefinition;
+import ast.Definition;
+import ast.Expression;
 import visitor.Visitor;
 
 public class Var extends AbstractExpression implements Expression {
 
     public String name;
+    public Definition definition;
 
     public Var(String name, int line, int column) {
         super(line, column);

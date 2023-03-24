@@ -2,9 +2,9 @@ package visitor;
 
 import ast.errors.ErrorType;
 import ast.expression.*;
-import ast.language.FuncDefinition;
-import ast.language.Program;
-import ast.language.VarDefinition;
+import ast.FuncDefinition;
+import ast.Program;
+import ast.VarDefinition;
 import ast.statement.*;
 import ast.type.*;
 

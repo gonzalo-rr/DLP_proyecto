@@ -1,4 +1,4 @@
-package ast.language;
+package ast;
 
 public interface Statement extends ASTNode {
 }

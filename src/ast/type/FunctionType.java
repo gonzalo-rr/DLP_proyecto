@@ -1,8 +1,8 @@
 package ast.type;
 
-import ast.language.AbstractNode;
-import ast.language.Type;
-import ast.language.VarDefinition;
+import ast.AbstractNode;
+import ast.Type;
+import ast.VarDefinition;
 import visitor.Visitor;
 
 import java.util.List;

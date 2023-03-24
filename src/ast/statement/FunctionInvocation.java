@@ -1,19 +1,19 @@
 package ast.statement;
 
 import ast.expression.AbstractExpression;
-import ast.language.AbstractNode;
-import ast.language.Expression;
-import ast.language.Statement;
+import ast.Expression;
+import ast.Statement;
+import ast.expression.Var;
 import visitor.Visitor;
 
 import java.util.List;
 
 public class FunctionInvocation extends AbstractExpression implements Statement, Expression {
 
-    public String name;
+    public Var name;
     public List<Expression> arguments;
 
-    public FunctionInvocation(String name, List<Expression> arguments, int line, int column) {
+    public FunctionInvocation(Var name, List<Expression> arguments, int line, int column) {
         super(line, column);
         this.name = name;
         this.arguments = arguments;

@@ -1,7 +1,6 @@
 package ast.expression;
 
-import ast.language.AbstractNode;
-import ast.language.Expression;
+import ast.Expression;
 import visitor.Visitor;
 
 public class Not extends AbstractExpression implements Expression {

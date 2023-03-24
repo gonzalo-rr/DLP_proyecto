@@ -1,11 +1,12 @@
-import errorhandler.ErrorHandler;
-import ast.language.ASTNode;
 import org.antlr.v4.runtime.*;
 import introspector.model.IntrospectorModel;
+
+import ast.ASTNode;
+import errorhandler.ErrorHandler;
 import introspector.view.IntrospectorView;
 import parser.*;
+import semantic.IdentificationVisitor;
 import semantic.TypeCheckingVisitor;
-import visitor.Visitor;
 
 public class Main {
 	
@@ -24,15 +25,15 @@ public class Main {
 		PmmParser parser = new PmmParser(tokens);	
 		ASTNode ast = parser.program().ast;
 
-		Visitor typeCheckingVisitor = new TypeCheckingVisitor();
-		ast.accept(typeCheckingVisitor,null);
+		ast.accept(new IdentificationVisitor(), null);
+		ast.accept(new TypeCheckingVisitor(),null);
 
 		// * Check errors
-		if(ErrorHandler.getInstance().anyError()){
+		if (ErrorHandler.getInstance().anyError()) {
 			// * Show errors
 			ErrorHandler.getInstance().showErrors(System.err);
 		}
-		else{
+		else {
 			// * The AST is shown
 			IntrospectorModel model=new IntrospectorModel("Program", ast);
 			new IntrospectorView("Introspector", model);

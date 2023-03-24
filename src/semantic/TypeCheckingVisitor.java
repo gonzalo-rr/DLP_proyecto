@@ -2,32 +2,11 @@ package semantic;
 
 import ast.errors.ErrorType;
 import ast.expression.*;
-import ast.language.FuncDefinition;
-import ast.language.Program;
-import ast.language.VarDefinition;
 import ast.statement.*;
-import ast.type.*;
+import visitor.AbstractVisitor;
 import visitor.Visitor;
 
-public class TypeCheckingVisitor implements Visitor<Void, Void> {
-
-    @Override
-    public Void visit(Program program, Void param) {
-        program.definitions.stream().forEach(definition -> definition.accept(this, param));
-        return null;
-    }
-
-    @Override
-    public Void visit(VarDefinition varDefinition, Void param) {
-        varDefinition.type.accept(this, param);
-        return null;
-    }
-
-    @Override
-    public Void visit(FuncDefinition funcDefinition, Void param) {
-        funcDefinition.statements.stream().forEach(statement -> statement.accept(this, param));
-        return null;
-    }
+public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements Visitor<Void, Void> {
 
     // Expressions
     @Override
@@ -127,20 +106,6 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
     }
 
     @Override
-    public Void visit(FunctionInvocation functionInvocation, Void param) {
-        functionInvocation.arguments.stream().forEach(expression -> expression.accept(this, param));
-        return null;
-    }
-
-    @Override
-    public Void visit(IfElse ifElse, Void param) {
-        ifElse.condition.accept(this, param);
-        ifElse.ifBody.stream().forEach(statement -> statement.accept(this, param));
-        ifElse.elseBody.stream().forEach(statement -> statement.accept(this, param));
-        return null;
-    }
-
-    @Override
     public Void visit(Input input, Void param) {
         input.expression.accept(this, param);
         if (!input.expression.getLValue()) {
@@ -148,74 +113,5 @@ public class TypeCheckingVisitor implements Visitor<Void, Void> {
         }
         return null;
     }
-
-    @Override
-    public Void visit(Print print, Void param) {
-        print.expression.accept(this, param);
-        return null;
-    }
-
-    @Override
-    public Void visit(Return return_statement, Void param) {
-        return_statement.expression.accept(this, param);
-        return null;
-    }
-
-    @Override
-    public Void visit(While while_statement, Void param) {
-        while_statement.condition.accept(this, param);
-        while_statement.body.stream().forEach(statement -> statement.accept(this, param));
-        return null;
-    }
-
-    @Override
-    public Void visit(ArrayType arrayType, Void param) {
-        arrayType.type.accept(this, param);
-        return null;
-    }
-
-    @Override
-    public Void visit(CharType charType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(DoubleType doubleType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(FunctionType functionType, Void param) {
-        functionType.paramsType.stream().forEach(varDefinition -> varDefinition.accept(this, param));
-        return null;
-    }
-
-    @Override
-    public Void visit(IntType intType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(RecordField recordField, Void param) {
-        recordField.type.accept(this, param);
-        return null;
-    }
-
-    @Override
-    public Void visit(StructType structType, Void param) {
-        structType.recordFieldList.stream().forEach(recordField -> recordField.accept(this, param));
-        return null;
-    }
-
-    @Override
-    public Void visit(VoidType voidType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(ErrorType errorType, Void param) {
-        return null;
-    }
-
 
 }

@@ -1,7 +1,7 @@
 grammar Pmm;
 
 @header {
-    import ast.language.*;
+    import ast.*;
     import ast.expression.*;
     import ast.statement.*;
     import ast.type.*;
@@ -95,7 +95,7 @@ else_statement returns [List<Statement> ast = new ArrayList<Statement>()]: 'else
 while_loop returns [While ast]: OP='while' expression ':' ('{' st=statements '}' | st=statements) { $ast = new While($expression.ast, $st.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
        ;
 // También es una expresión (si retorna un valor)
-func_invocation returns [FunctionInvocation ast]: ID '(' arguments ')' { $ast = new FunctionInvocation($ID.text, $arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
+func_invocation returns [FunctionInvocation ast]: ID '(' arguments ')' { $ast = new FunctionInvocation(new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
                  ;
 arguments returns [List<Expression> ast = new ArrayList<Expression>()]: /* epsilon */
     | separated_expressions { $ast = $separated_expressions.ast; };

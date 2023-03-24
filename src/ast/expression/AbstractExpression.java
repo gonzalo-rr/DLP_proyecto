@@ -1,7 +1,7 @@
 package ast.expression;
 
-import ast.language.AbstractNode;
-import ast.language.Expression;
+import ast.AbstractNode;
+import ast.Expression;
 
 public abstract class AbstractExpression extends AbstractNode implements Expression {
 

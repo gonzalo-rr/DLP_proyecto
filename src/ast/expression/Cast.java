@@ -1,8 +1,7 @@
 package ast.expression;
 
-import ast.language.AbstractNode;
-import ast.language.Expression;
-import ast.language.Type;
+import ast.Expression;
+import ast.Type;
 import visitor.Visitor;
 
 public class Cast extends AbstractExpression implements Expression {
