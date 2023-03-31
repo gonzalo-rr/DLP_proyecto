@@ -17,7 +17,7 @@ G = {
 	(15) Print: stmnt -> expr
 	(16) Input: stmnt -> expr
 	(17) Return: stmnt -> expr
-	(18) IfElse: stmnt1 -> expr1 stmnt2* stmnt3*
+	(18) IfElse: stmnt1 -> expr stmnt2* stmnt3*
 	(19) While: stmnt1 -> expr stmnt2*
 	(20) 
 
@@ -41,11 +41,11 @@ R = {
 	(12) expr1.type = expr2.type.minusUnary()
 	(13) expr1.type = expr2.type.parenthesis(expr3*.stream().map(expr -> expr.type).toList())
 	(14) expr1.type.mustBeEquals(expr2.type)
-	(15) 
-	(16) 
-	(17) 
-	(18) 
-	(19) 
+	(15) expr.asBuiltInType()
+	(16) expr.asBuiltInTupe()
+	(17) // TODO
+	(18) expr.asBoolean()
+	(19) expr.asBoolean()
 	(20) 
 
 }
