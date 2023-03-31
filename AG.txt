@@ -1,0 +1,51 @@
+G = {
+
+	(1) Arithmetic: expr1 -> expr2 (+|-|*|/|%) expr3
+	(2) Logical: expr1 -> expr2 (&& | ||) expr3
+	(3) Comparaison: expr1 -> expr2 (== | != | > | < | >= | <=) expr3
+	(4) LitInt: expr -> INT_CONSTANT
+	(5) LitDouble: expr -> REAL_CONSTANT
+	(6) LitChar: expr -> CHAR_CONSTANT
+	(7) StructAccess: expr1 -> expr2 ID
+	(8) Var: expr -> ID def
+	(9) ArrayAccess: expr1 -> expr2 expr3
+	(10) Cast: expr1 -> expr2 type
+	(11) Not: expr1 -> expr2
+	(12) MinusUnary: expr1 -> expr2
+	(13) FunctionInvocation: expr1 -> expr2 expr3*
+	(14) Assignment: stmnt -> expr1 expr2
+	(15) Print: stmnt -> expr
+	(16) Input: stmnt -> expr
+	(17) Return: stmnt -> expr
+	(18) IfElse: stmnt1 -> expr1 stmnt2* stmnt3*
+	(19) While: stmnt1 -> expr stmnt2*
+	(20) 
+
+}
+
+A = { expr.type } dominio: { Type }
+
+R = {
+
+	(1) expr1.type = expr2.type.arithmetic(expr3.type)
+	(2) expr1.type = expr2.type.logical(expr3.type)
+	(3) expr1.type = expr2.type.comparaison(expr3.type)
+	(4) expr.type = IntType.getInstance()
+	(5) expr.type = DoubleType.getInstance()
+	(6) expr.type = CharType.getInstance()
+	(7) expr1.type = expr2.type.dot(ID)
+	(8) expr.type = def.getType()
+	(9) expr1.type = expr2.type.squareBrackets(expr3.type)
+	(10) expr1.type = expr2.type.canBeCastTo(type)
+	(11) expr1.type = expr2.type.not()
+	(12) expr1.type = expr2.type.minusUnary()
+	(13) expr1.type = expr2.type.parenthesis(expr3*.stream().map(expr -> expr.type).toList())
+	(14) expr1.type.mustBeEquals(expr2.type)
+	(15) 
+	(16) 
+	(17) 
+	(18) 
+	(19) 
+	(20) 
+
+}
