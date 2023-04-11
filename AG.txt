@@ -2,7 +2,7 @@ G = {
 
 	(1) Arithmetic: expr1 -> expr2 (+|-|*|/|%) expr3
 	(2) Logical: expr1 -> expr2 (&& | ||) expr3
-	(3) Comparaison: expr1 -> expr2 (== | != | > | < | >= | <=) expr3
+	(3) Comparison: expr1 -> expr2 (== | != | > | < | >= | <=) expr3
 	(4) LitInt: expr -> INT_CONSTANT
 	(5) LitDouble: expr -> REAL_CONSTANT
 	(6) LitChar: expr -> CHAR_CONSTANT
@@ -19,7 +19,7 @@ G = {
 	(17) Return: stmnt -> expr
 	(18) IfElse: stmnt1 -> expr stmnt2* stmnt3*
 	(19) While: stmnt1 -> expr stmnt2*
-	(20) 
+	(20) FuncDefinition: def -> stmnt*
 
 }
 
@@ -29,7 +29,7 @@ R = {
 
 	(1) expr1.type = expr2.type.arithmetic(expr3.type)
 	(2) expr1.type = expr2.type.logical(expr3.type)
-	(3) expr1.type = expr2.type.comparaison(expr3.type)
+	(3) expr1.type = expr2.type.comparison(expr3.type)
 	(4) expr.type = IntType.getInstance()
 	(5) expr.type = DoubleType.getInstance()
 	(6) expr.type = CharType.getInstance()
@@ -41,11 +41,11 @@ R = {
 	(12) expr1.type = expr2.type.minusUnary()
 	(13) expr1.type = expr2.type.parenthesis(expr3*.stream().map(expr -> expr.type).toList())
 	(14) expr1.type.mustBeEquals(expr2.type)
-	(15) expr.asBuiltInType()
-	(16) expr.asBuiltInTupe()
-	(17) // TODO
-	(18) expr.asBoolean()
-	(19) expr.asBoolean()
-	(20) 
+	(15) expr.type.asBuiltInType()
+	(16) expr.type.asBuiltInType()
+	(17) expr.type.asBuiltInType()
+	(18) expr.type.asBoolean()
+	(19) expr.type.asBoolean()
+	(20) stmnt*.stream().forEach(stmnt -> stmnt.returnType.mustBeEquals(def.type.returnType))
 
 }

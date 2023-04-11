@@ -3,13 +3,13 @@ package ast.expression;
 import ast.Expression;
 import visitor.Visitor;
 
-public class Comparaison extends AbstractExpression implements Expression {
+public class Comparison extends AbstractExpression implements Expression {
 
     public String operation;
     public Expression left;
     public Expression right;
 
-    public Comparaison(Expression left, String operation, Expression right, int line, int column) {
+    public Comparison(Expression left, String operation, Expression right, int line, int column) {
         super(line, column);
         this.left = left;
         this.operation = operation;

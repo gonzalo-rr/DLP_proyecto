@@ -34,10 +34,10 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
     }
 
     @Override
-    public Void visit(Comparaison comparaison, Void param) {
-        comparaison.left.accept(this, param);
-        comparaison.right.accept(this, param);
-        comparaison.setLValue(false);
+    public Void visit(Comparison comparison, Void param) {
+        comparison.left.accept(this, param);
+        comparison.right.accept(this, param);
+        comparison.setLValue(false);
         return null;
     }
 

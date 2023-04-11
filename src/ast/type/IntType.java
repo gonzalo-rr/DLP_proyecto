@@ -4,7 +4,7 @@ import ast.AbstractNode;
 import ast.Type;
 import visitor.Visitor;
 
-public class IntType extends AbstractNode implements Type {
+public class IntType extends AbstractType implements Type {
 
     private static IntType instance;
 

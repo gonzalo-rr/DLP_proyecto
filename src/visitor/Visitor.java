@@ -24,7 +24,7 @@ public interface Visitor<TP, TR> {
 
     public TR visit(Cast cast, TP param);
 
-    public TR visit(Comparaison comparaison, TP param);
+    public TR visit(Comparison comparison, TP param);
 
     public TR visit(LitChar litChar, TP param);
 

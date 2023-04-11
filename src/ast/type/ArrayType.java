@@ -1,10 +1,12 @@
 package ast.type;
 
+import ast.ASTNode;
 import ast.AbstractNode;
 import ast.Type;
+import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class ArrayType extends AbstractNode implements Type {
+public class ArrayType extends AbstractType implements Type {
 
     public int size;
     public Type type;
@@ -13,6 +15,14 @@ public class ArrayType extends AbstractNode implements Type {
         super(line, column);
         this.size = size;
         this.type = type;
+    }
+
+    @Override
+    public Type squareBrackets(Type type, ASTNode node) {
+        if ((type instanceof IntType)) {
+            return type;
+        }
+        return new ErrorType("The index " + node + " of the ArrayAccess must be of IntType", node.getLine(), node.getColumn());
     }
 
     @Override

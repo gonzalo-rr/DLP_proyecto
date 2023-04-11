@@ -51,9 +51,9 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
-    public TR visit(Comparaison comparaison, TP param) {
-        comparaison.left.accept(this, param);
-        comparaison.right.accept(this, param);
+    public TR visit(Comparison comparison, TP param) {
+        comparison.left.accept(this, param);
+        comparison.right.accept(this, param);
         return null;
     }
 
