@@ -26,6 +26,6 @@ public interface Type extends ASTNode {
 
     Type asBuiltInType(Type type, ASTNode node);
 
-    Type asBoolean(Type type, ASTNode node);
+    Type asBoolean(ASTNode node);
 
 }

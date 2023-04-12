@@ -4,6 +4,8 @@ import ast.AbstractNode;
 import ast.Type;
 import visitor.Visitor;
 
+import java.util.Objects;
+
 public class RecordField extends AbstractNode {
 
     public String name;
@@ -20,4 +22,16 @@ public class RecordField extends AbstractNode {
         return visitor.visit(this, param);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecordField that = (RecordField) o;
+        return name.equals(that.name) && type.equals(that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type);
+    }
 }

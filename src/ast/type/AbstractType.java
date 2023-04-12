@@ -69,7 +69,7 @@ public abstract class AbstractType extends AbstractNode implements Type {
     }
 
     @Override
-    public Type asBoolean(Type type, ASTNode node) {
+    public Type asBoolean(ASTNode node) {
         return new ErrorType("", node.getLine(), node.getColumn());
     }
 
