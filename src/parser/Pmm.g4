@@ -40,8 +40,8 @@ var_definition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()
                 ;
 
 // Definición de funciones
-func_definition returns [FuncDefinition ast] locals [FunctionType functionType]: OP='def' ID '(' func_params ')' ':' ((type) { $functionType = new FunctionType($func_params.ast, $type.ast, $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getLine(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getCharPositionInLine() + 1); })?
-({ $functionType = new FunctionType($func_params.ast, VoidType.getInstance(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getLine(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getCharPositionInLine() + 1); }) '{' statements '}' { $ast = new FuncDefinition($ID.text, $functionType, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+func_definition returns [FuncDefinition ast] locals [FunctionType functionType, Type returnType = VoidType.getInstance()]: OP='def' ID '(' func_params ')' ':' ((type) { $returnType = $type.ast; })?
+({ $functionType = new FunctionType($func_params.ast, $returnType, $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getLine(), $func_params.ast.size() > 0 ? $func_params.ast.get(0).getLine() : $OP.getCharPositionInLine() + 1); }) '{' statements '}' { $ast = new FuncDefinition($ID.text, $functionType, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
                  ;
 func_params returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: params { $ast = $params.ast; }
         | /* epsilon */
@@ -115,7 +115,7 @@ expression returns [Expression ast]: func_invocation { $ast = $func_invocation.a
             | OP='!' left=expression { $ast = new Not($left.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
             | left=expression OP=('*' | '/' | '%') right=expression { $ast = new Arithmetic($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | left=expression OP=('+' | '-') right=expression { $ast = new Arithmetic($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
-            | left=expression OP=('>' | '>=' | '<' | '<=' | '!=' | '==') right=expression { $ast = new Comparaison($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
+            | left=expression OP=('>' | '>=' | '<' | '<=' | '!=' | '==') right=expression { $ast = new Comparison($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | left=expression OP='&&' right=expression { $ast = new Logical($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | left=expression OP='||' right=expression { $ast = new Logical($left.ast, $OP.text, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
             | ID { $ast = new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1); }

@@ -1,21 +1,31 @@
 package semantic;
 
+import ast.Expression;
+import ast.FuncDefinition;
 import ast.errors.ErrorType;
 import ast.expression.*;
 import ast.statement.*;
 import ast.type.CharType;
 import ast.type.DoubleType;
+import ast.type.FunctionType;
 import ast.type.IntType;
 import visitor.AbstractVisitor;
 import visitor.Visitor;
 
 public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements Visitor<Void, Void> {
 
+    @Override
+    public Void visit(FuncDefinition funcDefinition, Void param) {
+        funcDefinition.statements.forEach(statement -> statement.setReturnType(
+                ((FunctionType) funcDefinition.getType()).returnType));
+        super.visit(funcDefinition, param);
+        return null;
+    }
+
     // Expressions
     @Override
     public Void visit(Arithmetic arithmetic, Void param) {
-        arithmetic.left.accept(this, param);
-        arithmetic.right.accept(this, param);
+        super.visit(arithmetic, param);
         arithmetic.setLValue(false);
         arithmetic.setType(arithmetic.left.getType().arithmetic(arithmetic.right.getType(), arithmetic));
         return null;
@@ -23,8 +33,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(ArrayAccess arrayAccess, Void param) {
-        arrayAccess.array.accept(this, param);
-        arrayAccess.index.accept(this, param);
+        super.visit(arrayAccess, param);
         arrayAccess.setLValue(true);
         arrayAccess.setType(arrayAccess.array.getType().squareBrackets(arrayAccess.index.getType(), arrayAccess));
         return null;
@@ -32,8 +41,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(Cast cast, Void param) {
-        cast.expression.accept(this, param);
-        cast.type.accept(this, param);
+        super.visit(cast, param);
         cast.setLValue(false);
         cast.setType(cast.expression.getType().canBeCastTo(cast.type, cast));
         return null;
@@ -41,8 +49,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(Comparison comparison, Void param) {
-        comparison.left.accept(this, param);
-        comparison.right.accept(this, param);
+        super.visit(comparison, param);
         comparison.setLValue(false);
         comparison.setType(comparison.right.getType().comparison(comparison.left.getType(), comparison));
         return null;
@@ -50,6 +57,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(LitChar litChar, Void param) {
+        super.visit(litChar, param);
         litChar.setLValue(false);
         litChar.setType(CharType.getInstance());
         return null;
@@ -57,6 +65,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(LitDouble litDouble, Void param) {
+        super.visit(litDouble, param);
         litDouble.setLValue(false);
         litDouble.setType(DoubleType.getInstance());
         return null;
@@ -64,6 +73,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(LitInt litInt, Void param) {
+        super.visit(litInt, param);
         litInt.setLValue(false);
         litInt.setType(IntType.getInstance());
         return null;
@@ -71,16 +81,15 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(Logical logical, Void param) {
-        logical.left.accept(this, param);
-        logical.right.accept(this, param);
+        super.visit(logical, param);
         logical.setLValue(false);
-        logical.setType(logical.left.getType().logical(logical.left.getType(), logical));
+        logical.setType(logical.left.getType().logical(logical.right.getType(), logical));
         return null;
     }
 
     @Override
     public Void visit(MinusUnary minusUnary, Void param) {
-        minusUnary.expression.accept(this, param);
+        super.visit(minusUnary, param);
         minusUnary.setLValue(false);
         minusUnary.setType(minusUnary.expression.getType().minusUnary(minusUnary));
         return null;
@@ -88,7 +97,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(Not not, Void param) {
-        not.expression.accept(this, param);
+        super.visit(not, param);
         not.setLValue(false);
         not.setType(not.expression.getType().not(not));
         return null;
@@ -96,7 +105,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(StructAccess structAccess, Void param) {
-        structAccess.struct.accept(this, param);
+        super.visit(structAccess, param);
         structAccess.setLValue(true);
         structAccess.setType(structAccess.struct.getType().dot(structAccess.id, structAccess));
         return null;
@@ -104,6 +113,7 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(Var var, Void param) {
+        super.visit(var, param);
         var.setLValue(true);
         var.setType(var.definition.getType());
         return null;
@@ -111,19 +121,16 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(FunctionInvocation functionInvocation, Void param) {
-        functionInvocation.name.accept(this, param);
-        functionInvocation.arguments.stream().forEach(argument -> argument.accept(this, param));
+        super.visit(functionInvocation, param);
         functionInvocation.setType(functionInvocation.name.getType().parenthesis(
-                functionInvocation.arguments.stream().map(argument ->
-                        argument.getType()).toList(), functionInvocation));
+                functionInvocation.arguments.stream().map(Expression::getType).toList(), functionInvocation));
         return null;
     }
 
     // Statements
     @Override
     public Void visit(Assignment assignment, Void param) {
-        assignment.left.accept(this, param);
-        assignment.right.accept(this, param);
+        super.visit(assignment, param);
         if (!assignment.left.getLValue()) {
             new ErrorType("The left part of an assignment must be a Variable, Array Access or Struct Access", assignment.left.getLine(), assignment.left.getColumn());
         }
@@ -133,31 +140,43 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
 
     @Override
     public Void visit(Input input, Void param) {
-        input.expression.accept(this, param);
+        super.visit(input, param);
         if (!input.expression.getLValue()) {
             new ErrorType("The expression of an input must be a Variable, Array Access or Struct Access", input.expression.getLine(), input.expression.getColumn());
         }
-        input.expression.setType(input.expression.getType().asBuiltInType(input.expression));
+        input.expression.setType(input.expression.getType().asBuiltInType(input));
         return null;
     }
 
     @Override
     public Void visit(Print print, Void param) {
-        print.expression.accept(this, param);
-        print.expression.setType(print.expression.getType().asBuiltInType(print.expression));
+        super.visit(print, param);
+        print.expression.setType(print.expression.getType().asBuiltInType(print));
         return null;
     }
 
     @Override
     public Void visit(Return ret, Void param) {
-        ret.expression.accept(this, param);
-        ret.expression.setType(ret.expression.getType().asBuiltInType(ret.expression));
+        super.visit(ret, param);
+        ret.expression.setType(ret.expression.getType().asBuiltInType(ret));
+        ret.expression.getType().mustBeEquals(ret.getReturnType(), ret);
         return null;
     }
 
     @Override
     public Void visit(IfElse ifElse, Void param) {
-        ifElse.condition.setType(ifElse.condition.);
+        super.visit(ifElse, param);
+        ifElse.ifBody.forEach(statement -> statement.setReturnType(ifElse.getReturnType()));
+        ifElse.elseBody.forEach(statement -> statement.setReturnType(ifElse.getReturnType()));
+        ifElse.condition.setType(ifElse.condition.getType().asLogical(ifElse));
+        return null;
+    }
+
+    @Override
+    public Void visit(While whileStatement, Void param) {
+        super.visit(whileStatement, param);
+        whileStatement.body.forEach(statement -> statement.setReturnType(whileStatement.getReturnType()));
+        whileStatement.condition.setType(whileStatement.condition.getType().asLogical(whileStatement));
         return null;
     }
 

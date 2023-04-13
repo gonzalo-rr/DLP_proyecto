@@ -5,7 +5,7 @@ import ast.Expression;
 import ast.Statement;
 import visitor.Visitor;
 
-public class Print extends AbstractNode implements Statement {
+public class Print extends AbstractStatement implements Statement {
 
     public Expression expression;
 

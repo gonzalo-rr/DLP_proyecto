@@ -6,7 +6,7 @@ import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class DoubleType extends AbstractNode implements Type {
+public class DoubleType extends AbstractType implements Type {
 
     private static DoubleType instance;
 
@@ -26,8 +26,7 @@ public class DoubleType extends AbstractNode implements Type {
         if (type instanceof DoubleType) {
             return DoubleType.getInstance();
         }
-        return new ErrorType("It is not possible to perform an arithmetic operation between a DoubleType and a "
-                + type, node.getLine(), node.getColumn());
+        return super.arithmetic(type, node);
     }
 
     @Override
@@ -35,8 +34,7 @@ public class DoubleType extends AbstractNode implements Type {
         if (type instanceof DoubleType) {
             return IntType.getInstance();
         }
-        return new ErrorType("A DoubleType can not be compared with a " + type,
-                node.getLine(), node.getColumn());
+        return super.comparison(type, node);
     }
 
     @Override
@@ -44,7 +42,7 @@ public class DoubleType extends AbstractNode implements Type {
         if (type instanceof DoubleType) {
             return DoubleType.getInstance();
         }
-        return new ErrorType("A DoubleType can not be cast to " + type, node.getLine(), node.getColumn());
+        return super.canBeCastTo(type, node);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class DoubleType extends AbstractNode implements Type {
         if (type instanceof DoubleType) {
             return DoubleType.getInstance();
         }
-        return new ErrorType(type + " is not a DoubleType", node.getLine(), node.getColumn());
+        return super.mustBeEquals(type, node);
     }
 
     @Override

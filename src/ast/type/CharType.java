@@ -6,7 +6,7 @@ import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class CharType extends AbstractNode implements Type {
+public class CharType extends AbstractType implements Type {
 
     private static CharType instance;
 
@@ -26,8 +26,7 @@ public class CharType extends AbstractNode implements Type {
         if (type instanceof CharType) {
             return IntType.getInstance();
         }
-        return new ErrorType("It is not possible to perform an arithmetic operation between a CharType and a " +
-                type, node.getLine(), node.getColumn());
+        return super.arithmetic(type, node);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class CharType extends AbstractNode implements Type {
         if (type instanceof CharType) {
             return CharType.getInstance();
         }
-        return new ErrorType("A CharType can not be cast to " + type, node.getLine(), node.getColumn());
+        return super.canBeCastTo(type, node);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class CharType extends AbstractNode implements Type {
         if (type instanceof CharType) {
             return CharType.getInstance();
         }
-        return new ErrorType(type + " is not a CharType", node.getLine(), node.getColumn());
+        return super.mustBeEquals(type, node);
     }
 
     @Override

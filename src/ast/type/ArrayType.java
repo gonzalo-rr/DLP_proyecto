@@ -8,7 +8,7 @@ import visitor.Visitor;
 
 import java.util.Objects;
 
-public class ArrayType extends AbstractNode implements Type {
+public class ArrayType extends AbstractType implements Type {
 
     public int size;
     public Type type;
@@ -24,20 +24,7 @@ public class ArrayType extends AbstractNode implements Type {
         if ((type instanceof IntType)) {
             return type;
         }
-        return new ErrorType("The index " + node + " of the ArrayAccess must be of IntType", node.getLine(), node.getColumn());
-    }
-
-    @Override
-    public Type mustBeEquals(Type type, ASTNode node) {
-        if (type instanceof ArrayType arrayType) {
-            if (arrayType.size == this.size) {
-                Type resultType = arrayType.type.mustBeEquals(this.type, node);
-                if (!(resultType instanceof ErrorType)) {
-                    return this;
-                }
-            }
-        }
-        return new ErrorType(type + " is not " + this, node.getLine(), node.getColumn());
+        return super.squareBrackets(type, node);
     }
 
     @Override
@@ -50,16 +37,4 @@ public class ArrayType extends AbstractNode implements Type {
         return "ArrayType[size=" + size + ",type=" + type + "]";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ArrayType arrayType = (ArrayType) o;
-        return size == arrayType.size && type.equals(arrayType.type);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(size, type);
-    }
 }

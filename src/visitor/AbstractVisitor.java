@@ -13,13 +13,13 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     @Override
     public TR visit(FuncDefinition funcDefinition, TP param) {
         funcDefinition.getType().accept(this, param);
-        funcDefinition.statements.stream().forEach(statement -> statement.accept(this, param));
+        funcDefinition.statements.forEach(statement -> statement.accept(this, param));
         return null;
     }
 
     @Override
     public TR visit(Program program, TP param) {
-        program.definitions.stream().forEach(definition -> definition.accept(this, param));
+        program.definitions.forEach(definition -> definition.accept(this, param));
         return null;
     }
 
@@ -112,15 +112,15 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     @Override
     public TR visit(FunctionInvocation functionInvocation, TP param) {
         functionInvocation.name.accept(this, param);
-        functionInvocation.arguments.stream().forEach(expression -> expression.accept(this, param));
+        functionInvocation.arguments.forEach(expression -> expression.accept(this, param));
         return null;
     }
 
     @Override
     public TR visit(IfElse ifElse, TP param) {
         ifElse.condition.accept(this, param);
-        ifElse.ifBody.stream().forEach(statement -> statement.accept(this, param));
-        ifElse.elseBody.stream().forEach(statement -> statement.accept(this, param));
+        ifElse.ifBody.forEach(statement -> statement.accept(this, param));
+        ifElse.elseBody.forEach(statement -> statement.accept(this, param));
         return null;
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     @Override
     public TR visit(While while_statement, TP param) {
         while_statement.condition.accept(this, param);
-        while_statement.body.stream().forEach(statement -> statement.accept(this, param));
+        while_statement.body.forEach(statement -> statement.accept(this, param));
         return null;
     }
 
@@ -167,7 +167,7 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(FunctionType functionType, TP param) {
-        functionType.paramsType.stream().forEach(varDefinition -> varDefinition.accept(this, param));
+        functionType.paramsType.forEach(varDefinition -> varDefinition.accept(this, param));
         return null;
     }
 
@@ -184,7 +184,7 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(StructType structType, TP param) {
-        structType.recordFieldList.stream().forEach(recordField -> recordField.accept(this, param));
+        structType.recordFieldList.forEach(recordField -> recordField.accept(this, param));
         return null;
     }
 

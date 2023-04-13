@@ -4,7 +4,7 @@ import ast.AbstractNode;
 import ast.Type;
 import visitor.Visitor;
 
-public class VoidType extends AbstractNode implements Type {
+public class VoidType extends AbstractType implements Type {
 
     private static VoidType instance;
 
@@ -24,4 +24,8 @@ public class VoidType extends AbstractNode implements Type {
         return visitor.visit(this, param);
     }
 
+    @Override
+    public String toString() {
+        return "VoidType";
+    }
 }

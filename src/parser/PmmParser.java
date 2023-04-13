@@ -10,9 +10,11 @@ package parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
-    import org.antlr.v4.runtime.tree.*;
+import org.antlr.v4.runtime.misc.*;
+import org.antlr.v4.runtime.tree.*;
 import java.util.List;
-    import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
 public class PmmParser extends Parser {
@@ -453,6 +455,7 @@ public class PmmParser extends Parser {
 	public static class Func_definitionContext extends ParserRuleContext {
 		public FuncDefinition ast;
 		public FunctionType functionType;
+		public Type returnType = VoidType.getInstance();
 		public Token OP;
 		public Token ID;
 		public Func_paramsContext func_params;
@@ -507,12 +510,12 @@ public class PmmParser extends Parser {
 				setState(105);
 				((Func_definitionContext)_localctx).type = type();
 				}
-				 ((Func_definitionContext)_localctx).functionType =  new FunctionType(((Func_definitionContext)_localctx).func_params.ast, ((Func_definitionContext)_localctx).type.ast, ((Func_definitionContext)_localctx).func_params.ast.size() > 0 ? ((Func_definitionContext)_localctx).func_params.ast.get(0).getLine() : ((Func_definitionContext)_localctx).OP.getLine(), ((Func_definitionContext)_localctx).func_params.ast.size() > 0 ? ((Func_definitionContext)_localctx).func_params.ast.get(0).getLine() : ((Func_definitionContext)_localctx).OP.getCharPositionInLine() + 1); 
+				 ((Func_definitionContext)_localctx).returnType =  ((Func_definitionContext)_localctx).type.ast; 
 				}
 			}
 
 			{
-			 ((Func_definitionContext)_localctx).functionType =  new FunctionType(((Func_definitionContext)_localctx).func_params.ast, VoidType.getInstance(), ((Func_definitionContext)_localctx).func_params.ast.size() > 0 ? ((Func_definitionContext)_localctx).func_params.ast.get(0).getLine() : ((Func_definitionContext)_localctx).OP.getLine(), ((Func_definitionContext)_localctx).func_params.ast.size() > 0 ? ((Func_definitionContext)_localctx).func_params.ast.get(0).getLine() : ((Func_definitionContext)_localctx).OP.getCharPositionInLine() + 1); 
+			 ((Func_definitionContext)_localctx).functionType =  new FunctionType(((Func_definitionContext)_localctx).func_params.ast, _localctx.returnType, ((Func_definitionContext)_localctx).func_params.ast.size() > 0 ? ((Func_definitionContext)_localctx).func_params.ast.get(0).getLine() : ((Func_definitionContext)_localctx).OP.getLine(), ((Func_definitionContext)_localctx).func_params.ast.size() > 0 ? ((Func_definitionContext)_localctx).func_params.ast.get(0).getLine() : ((Func_definitionContext)_localctx).OP.getCharPositionInLine() + 1); 
 			}
 			setState(111);
 			match(T__5);
@@ -1974,7 +1977,7 @@ public class PmmParser extends Parser {
 						}
 						setState(339);
 						((ExpressionContext)_localctx).right = ((ExpressionContext)_localctx).expression = expression(5);
-						 ((ExpressionContext)_localctx).ast =  new Comparison(((ExpressionContext)_localctx).left.ast, (((ExpressionContext)_localctx).OP!=null?((ExpressionContext)_localctx).OP.getText():null), ((ExpressionContext)_localctx).right.ast, ((ExpressionContext)_localctx).left.ast.getLine(), ((ExpressionContext)_localctx).left.ast.getColumn());
+						 ((ExpressionContext)_localctx).ast =  new Comparison(((ExpressionContext)_localctx).left.ast, (((ExpressionContext)_localctx).OP!=null?((ExpressionContext)_localctx).OP.getText():null), ((ExpressionContext)_localctx).right.ast, ((ExpressionContext)_localctx).left.ast.getLine(), ((ExpressionContext)_localctx).left.ast.getColumn()); 
 						}
 						break;
 					case 4:

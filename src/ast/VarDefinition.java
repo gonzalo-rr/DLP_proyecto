@@ -1,8 +1,9 @@
 package ast;
 
+import ast.statement.AbstractStatement;
 import visitor.Visitor;
 
-public class VarDefinition extends AbstractNode implements Definition, Statement {
+public class VarDefinition extends AbstractStatement implements Definition, Statement {
 
     public String name;
     public Type type;

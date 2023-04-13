@@ -1,19 +1,16 @@
 package semantic;
 
 import ast.FuncDefinition;
-import ast.Program;
 import ast.VarDefinition;
 import ast.errors.ErrorType;
 import ast.expression.*;
-import ast.statement.*;
-import ast.type.*;
 import symboltable.SymbolTable;
 import visitor.AbstractVisitor;
 import visitor.Visitor;
 
 public class IdentificationVisitor extends AbstractVisitor<Void, Void> implements Visitor<Void, Void> {
 
-    private SymbolTable symbolTable = new SymbolTable();
+    private final SymbolTable symbolTable = new SymbolTable();
 
     @Override
     public Void visit(FuncDefinition funcDefinition, Void param) {
@@ -26,7 +23,7 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> implement
         symbolTable.set(); // Nuevo ámbito
 
         funcDefinition.getType().accept(this, param);
-        funcDefinition.statements.stream().forEach(statement -> statement.accept(this, param));
+        funcDefinition.statements.forEach(statement -> statement.accept(this, param));
 
         symbolTable.reset(); // Se elimina el ámbito
         return null;
@@ -35,7 +32,6 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> implement
     @Override
     public Void visit(VarDefinition varDefinition, Void param) {
         varDefinition.type.accept(this, param);
-
         if (!symbolTable.insert(varDefinition)) {
             new ErrorType(
                     "The Variable Definition " + varDefinition.getName() + " is already defined in this scope",
@@ -50,7 +46,10 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> implement
             var.definition = new VarDefinition(var.name, new ErrorType(
                     "The Variable " + var.name + " is not defined in this scope",
                     var.getLine(), var.getColumn()), var.getLine(), var.getColumn());
+            return null;
         } // Se asocia a una definición de tipo error
+        var.definition = symbolTable.find(var.name);
+        // Se asocia a una definición del tipo correspondiente
         return null;
     }
 

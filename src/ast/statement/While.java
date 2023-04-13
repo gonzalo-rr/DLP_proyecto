@@ -7,7 +7,7 @@ import visitor.Visitor;
 
 import java.util.List;
 
-public class While extends AbstractNode implements Statement {
+public class While extends AbstractStatement implements Statement {
 
     public Expression condition;
     public List<Statement> body;

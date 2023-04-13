@@ -6,7 +6,7 @@ import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class IntType extends AbstractNode implements Type {
+public class IntType extends AbstractType implements Type {
 
     private static IntType instance;
 
@@ -26,8 +26,7 @@ public class IntType extends AbstractNode implements Type {
         if (type instanceof IntType) {
             return IntType.getInstance();
         }
-        return new ErrorType("It is not possible to perform an arithmetic operation between an IntType and a "
-                + type, node.getLine(), node.getColumn());
+        return super.arithmetic(type, node);
     }
 
     @Override
@@ -35,8 +34,7 @@ public class IntType extends AbstractNode implements Type {
         if (type instanceof IntType) {
             return IntType.getInstance();
         }
-        return new ErrorType("It is not possible to perform a logical operation between an IntType and a "
-                + type, node.getLine(), node.getColumn());
+        return super.logical(type, node);
     }
 
     @Override
@@ -44,8 +42,7 @@ public class IntType extends AbstractNode implements Type {
         if (type instanceof IntType) {
             return IntType.getInstance();
         }
-        return new ErrorType("An IntType can not be compared with a " + type,
-                node.getLine(), node.getColumn());
+        return super.comparison(type, node);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class IntType extends AbstractNode implements Type {
         if (type instanceof CharType) {
             return CharType.getInstance();
         }
-        return new ErrorType("An IntType can not be cast to " + type, node.getLine(), node.getColumn());
+        return super.canBeCastTo(type, node);
     }
 
     @Override
@@ -77,7 +74,7 @@ public class IntType extends AbstractNode implements Type {
         if (type instanceof IntType) {
             return IntType.getInstance();
         }
-        return new ErrorType(type + " is not an IntType", node.getLine(), node.getColumn());
+        return super.mustBeEquals(type, node);
     }
 
     @Override
@@ -86,7 +83,7 @@ public class IntType extends AbstractNode implements Type {
     }
 
     @Override
-    public Type asBoolean(ASTNode node) {
+    public Type asLogical(ASTNode node) {
         return IntType.getInstance();
     }
 
