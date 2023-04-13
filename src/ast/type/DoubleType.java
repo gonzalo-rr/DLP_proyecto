@@ -6,7 +6,7 @@ import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class DoubleType extends AbstractType implements Type {
+public class DoubleType extends AbstractNode implements Type {
 
     private static DoubleType instance;
 
@@ -61,7 +61,7 @@ public class DoubleType extends AbstractType implements Type {
     }
 
     @Override
-    public Type asBuiltInType(Type type, ASTNode node) {
+    public Type asBuiltInType(ASTNode node) {
         return DoubleType.getInstance();
     }
 

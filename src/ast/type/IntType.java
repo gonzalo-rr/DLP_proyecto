@@ -1,11 +1,12 @@
 package ast.type;
 
 import ast.ASTNode;
+import ast.AbstractNode;
 import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class IntType extends AbstractType implements Type {
+public class IntType extends AbstractNode implements Type {
 
     private static IntType instance;
 
@@ -80,7 +81,7 @@ public class IntType extends AbstractType implements Type {
     }
 
     @Override
-    public Type asBuiltInType(Type type, ASTNode node) {
+    public Type asBuiltInType(ASTNode node) {
         return IntType.getInstance();
     }
 

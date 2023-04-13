@@ -6,7 +6,7 @@ import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
-public class CharType extends AbstractType implements Type {
+public class CharType extends AbstractNode implements Type {
 
     private static CharType instance;
 
@@ -50,7 +50,7 @@ public class CharType extends AbstractType implements Type {
     }
 
     @Override
-    public Type asBuiltInType(Type type, ASTNode node) {
+    public Type asBuiltInType(ASTNode node) {
         return CharType.getInstance();
     }
 

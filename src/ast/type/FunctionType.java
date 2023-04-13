@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.ASTNode;
+import ast.AbstractNode;
 import ast.Type;
 import ast.VarDefinition;
 import ast.errors.ErrorType;
@@ -8,7 +9,7 @@ import visitor.Visitor;
 
 import java.util.List;
 
-public class FunctionType extends AbstractType implements Type {
+public class FunctionType extends AbstractNode implements Type {
 
     public List<VarDefinition> paramsType;
     public Type returnType;

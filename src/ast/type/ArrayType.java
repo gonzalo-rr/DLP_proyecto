@@ -1,13 +1,14 @@
 package ast.type;
 
 import ast.ASTNode;
+import ast.AbstractNode;
 import ast.Type;
 import ast.errors.ErrorType;
 import visitor.Visitor;
 
 import java.util.Objects;
 
-public class ArrayType extends AbstractType implements Type {
+public class ArrayType extends AbstractNode implements Type {
 
     public int size;
     public Type type;
