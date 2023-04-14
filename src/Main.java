@@ -1,3 +1,4 @@
+import codegenerator.OffSetVisitor;
 import org.antlr.v4.runtime.*;
 import introspector.model.IntrospectorModel;
 
@@ -29,12 +30,13 @@ public class Main {
 		ast.accept(new TypeCheckingVisitor(),null);
 
 		// * Check errors
-		if (ErrorHandler.getInstance().anyError()) {
+		if(ErrorHandler.getInstance().anyError()){
 			// * Show errors
 			ErrorHandler.getInstance().showErrors(System.err);
 		}
-		else {
+		else{
 			// * The AST is shown
+			ast.accept(new OffSetVisitor(),null);
 			IntrospectorModel model=new IntrospectorModel("Program", ast);
 			new IntrospectorView("Introspector", model);
 		}
