@@ -7,7 +7,8 @@ G = {
 	(5) LitDouble: expr -> REAL_CONSTANT
 	(6) LitChar: expr -> CHAR_CONSTANT
 	(7) StructAccess: expr1 -> expr2 ID
-	(8) Var: expr -> ID definition
+	// (8) Var: expr -> ID definition
+	(8) Var: expr -> ID
 	(9) ArrayAccess: expr1 -> expr2 expr3
 	(10) Cast: expr1 -> type expr2
 	(11) Not: expr1 -> expr2
@@ -34,7 +35,8 @@ R = {
 	(5) expr.type = DoubleType.getInstance()
 	(6) expr.type = CharType.getInstance()
 	(7) expr1.type = expr2.type.dot(ID)
-	(8) expr.type = definition.getType()
+	// (8) expr.type = definition.getType()
+	(8) expr.type = expr.getType()
 	(9) expr1.type = expr2.type.squareBrackets(expr3.type)
 	(10) expr1.type = expr2.type.canBeCastTo(type)
 	(11) expr1.type = expr2.type.not()
