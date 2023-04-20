@@ -10,11 +10,20 @@ public class RecordField extends AbstractNode {
 
     public String name;
     public Type type;
+    private int offset;
 
     public RecordField(String name, Type type, int line, int column) {
         super(line, column);
         this.name = name;
         this.type = type;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     @Override

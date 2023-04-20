@@ -28,4 +28,9 @@ public class VoidType extends AbstractType implements Type {
     public String toString() {
         return "VoidType";
     }
+
+    @Override
+    public int numberOfBytes() {
+        return 0;
+    }
 }

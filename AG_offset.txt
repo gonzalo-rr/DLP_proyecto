@@ -1,10 +1,10 @@
 G = {
 
     (1) FuncDefinition: funcDefinition -> type ID varDefinition* statement*
-    (2) RecordType: type -> fields*
+    (2) RecordType: type -> field*
     (3) VarDefinition: varDefinition -> type ID
     (4) RecordField: field -> ID type
-    (X) FunctionType: type1 -> type2 varDefinition*
+    (X) FunctionType: type1 -> varDefinition* type2
     (X) Variable: expression -> ID
 
 }
@@ -13,17 +13,26 @@ A = { field.offset } dominio: { int }
 
 R = {
 
+    // Parámetros de function
     (1) int paramBytesSum = 0;
         for (int i = varDefinition*.size() - 1; i >= 0; i--) {
             varDefinition varDef = varDefinition*.get(i);
             varDef.offset = 4 + paramBytesSum;
-            paramBytesSum += varDef.type.numberOfBytes;
+            paramBytesSum += varDef.type.numberOfBytes();
         }
+    // Campos de struct
     (2) int fieldBytesSum = 0;
         for (RecordField field : field*) {
             field.offset = fieldBytesSum;
             fieldBytesSum += field.type.numberOfBytes();
         }
-    (3)
+    // Definiciones de variables (globales y locales)
+    (3) if (varDefinition.scope == 0) {
+            varDefinition.offset = globalBytesSum;
+            globalBytesSum += varDefinition.type.numberOfBytes();
+       } else {
+            localBytesSum += varDefinition.type.numberOfBytes();
+            varDefinition.offset = -localBytesSum;
+       }
 
 }

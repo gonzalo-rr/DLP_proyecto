@@ -8,6 +8,7 @@ public class VarDefinition extends AbstractStatement implements Definition, Stat
     public String name;
     public Type type;
     private int scope;
+    private int offset;
 
     public VarDefinition(String name, Type type, int line, int column) {
         super(line, column);
@@ -33,6 +34,14 @@ public class VarDefinition extends AbstractStatement implements Definition, Stat
     @Override
     public void setScope(int scope) {
         this.scope = scope;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     @Override

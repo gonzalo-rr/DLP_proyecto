@@ -28,4 +28,6 @@ public interface Type extends ASTNode {
 
     Type asLogical(ASTNode node);
 
+    int numberOfBytes();
+
 }

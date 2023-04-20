@@ -99,4 +99,9 @@ public class ErrorType extends AbstractType implements Type {
     public Type asLogical(ASTNode node) {
         return this;
     }
+
+    @Override
+    public int numberOfBytes() {
+        return 0;
+    }
 }

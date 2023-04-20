@@ -1,12 +1,12 @@
 # Global variables
-i: int;				0
-r: double; 			2
-c: char; 			6
+i: int;				#0
+r: double; 			#2
+c: char; 			#6
 
 # Functions
-def f(pi:int, pr:double): int {		0	4
-  lr:double; 				-4
-  li:int;				-6
+def f(pi:int, pr:double): int {		#0	4 ==> ¿8 4?
+  lr:double; 				#-4
+  li:int;				#-6
   
   li = pi;
   lr = pr;
@@ -15,9 +15,9 @@ def f(pi:int, pr:double): int {		0	4
 
 # Main program
 def main(): {
-  pair: struct { 	   		-3
-    integer:int;			0
-    character:char;			2
+  pair: struct { 	   		#-3
+    integer:int;			#0
+    character:char;			#2
   };
 	
   i = 3;

@@ -30,6 +30,15 @@ public class StructType extends AbstractType implements Type {
     }
 
     @Override
+    public int numberOfBytes() {
+        int bytes = 0;
+        for (RecordField recordField : recordFieldList) {
+            bytes += recordField.type.numberOfBytes();
+        }
+        return bytes;
+    }
+
+    @Override
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP param) {
         return visitor.visit(this, param);
     }
@@ -37,16 +46,6 @@ public class StructType extends AbstractType implements Type {
     @Override
     public String toString() {
         return "StructType";
-
-//        StringBuilder sB = new StringBuilder("StructType[fields=");
-//        if (recordFieldList.size() > 0) {
-//            sB.append(recordFieldList.get(0));
-//            if (recordFieldList.size() > 1) {
-//                recordFieldList.stream().skip(1).forEach(recordField -> sB.append(",").append(recordField.name));
-//            }
-//        }
-//        sB.append("]");
-//        return sB.toString();
     }
 
 }
