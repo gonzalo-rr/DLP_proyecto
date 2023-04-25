@@ -1,13 +1,10 @@
 package ast.type;
 
 import ast.ASTNode;
-import ast.AbstractNode;
 import ast.Type;
-import ast.errors.ErrorType;
 import visitor.Visitor;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public class StructType extends AbstractType implements Type {
