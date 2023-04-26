@@ -102,4 +102,9 @@ public abstract class AbstractType extends AbstractNode implements Type {
         return new ErrorType(this + " is not a Logical expression", node.getLine(), node.getColumn());
     }
 
+    @Override
+    public char suffix() {
+        return '\0';
+    }
+
 }

@@ -13,7 +13,6 @@ public class FunctionInvocation extends AbstractExpression implements Statement,
 
     public Var name;
     public List<Expression> arguments;
-
     public Type returnType;
 
     public FunctionInvocation(Var name, List<Expression> arguments, int line, int column) {

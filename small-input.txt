@@ -1,1 +1,9 @@
-a, a, b, c
+c: char;
+i: int;
+r: double;
+
+def main(): {
+	a, i:int;
+	
+	r=3.5;
+}

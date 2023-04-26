@@ -1,5 +1,6 @@
 package codegenerator;
 
+import ast.VarDefinition;
 import ast.expression.*;
 import visitor.AbstractCGVisitor;
 
@@ -46,12 +47,18 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
      * if (exp.definition.scope == 0)
      *  <pusha> exp.definition.offset
      * else
-     *  <push> bp
+     *  <pusha bp>
      *  <pushi> exp.definition.offset
      *  <addi>
      */
     @Override
     public Void visit(Var var, Void param) {
+        if (var.definition.getScope() == 0) {
+            cG.pusha(((VarDefinition) var.definition).getOffset());
+        } else {
+            cG.pushaBp();
+            cG.pushi(((VarDefinition) var.definition).getOffset());
+        }
         return null;
     }
 

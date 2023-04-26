@@ -78,4 +78,9 @@ public class DoubleType extends AbstractType implements Type {
         return "DoubleType";
     }
 
+    @Override
+    public char suffix() {
+        return 'f';
+    }
+
 }

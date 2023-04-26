@@ -2,11 +2,12 @@ package codegenerator;
 
 import ast.FuncDefinition;
 import ast.Program;
+import ast.Statement;
 import ast.VarDefinition;
-import ast.errors.ErrorType;
 import ast.statement.*;
-import ast.type.*;
 import visitor.AbstractCGVisitor;
+
+import java.util.List;
 
 public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
@@ -27,20 +28,46 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      * execute[[ FuncDefinition : funcDefinition -> ID type definitions* statements* ]] =
      * ID:
      * definitions*.forEach(definition => execute[[ definition ]])
+     * <enter> definitions*.stream().filter(definition => definition.offset < 0).reduce(0, (definition1, definition2) => definition1.type.numberOfBytes() + definition2.type.numberOfBytes())
+     * statements*.forEach(statement => execute[[ statement ]])
+     * <ret> type.numberOfBytes(), definitions*.stream().filter(definition => definition.offset < 0).reduce(0, (definition1, definition2) => definition1.type.numberOfBytes() + definition2.type.numberOfBytes()), definitions*.stream().filter(definition => definition.offset > 0).reduce(0, (definition1, definition2) => definition1.type.numberOfBytes() + definition2.type.numberOfBytes())
      */
     @Override
     public Void visit(FuncDefinition funcDefinition, Void param) {
+        cG.write(funcDefinition.getName() + ":");
+
+        List<VarDefinition> varDefinitions = funcDefinition.statements.stream().filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).toList();
+        List<Statement> statements = funcDefinition.statements.stream().filter(statement -> !(statement instanceof VarDefinition)).toList();
+
+        List<VarDefinition> paramDefinitions = varDefinitions.stream().filter(varDefinition -> varDefinition.getOffset() > 0).toList();
+        List<VarDefinition> localDefinitions = varDefinitions.stream().filter(varDefinition -> varDefinition.getOffset() < 0).toList();
+
+        cG.write("\' Parameters");
+        paramDefinitions.forEach(varDefinition -> varDefinition.accept(this, param));
+        cG.write("\' LocalVariables");
+        localDefinitions.forEach(varDefinition -> varDefinition.accept(this, param));
+
+        cG.enter(localDefinitions.stream().map(varDefinition -> varDefinition.type.numberOfBytes()).reduce(0, Integer::sum));
+
+        statements.forEach(statement -> statement.accept(this, param));
+
+        cG.ret(funcDefinition.getType().numberOfBytes(), localDefinitions.stream().map(varDefinition -> varDefinition.type.numberOfBytes()).reduce(0, Integer::sum), paramDefinitions.stream().map(varDefinition -> varDefinition.type.numberOfBytes()).reduce(0, Integer::sum));
         return null;
     }
 
     /**
-     * execute[[ Program : program -> definitions* ]] =
-     * definitions*.forEach(definition => execute[[ definition ]]) // para comentarios y etiquetas
+     * execute[[ Program : program -> varDefinitions* functionDefinitions* ]] =
+     * varDefinitions*.forEach(varDefinition => execute[[ varDefinition ]]) // para comentarios de variables
      * <call> main
      * <halt>
+     * definitions*.forEach(functionDefinition => execute[[ functionDefinition ]]) // para etiquetas y código
      */
     @Override
     public Void visit(Program program, Void param) {
+        program.definitions.stream().filter(definition -> definition instanceof VarDefinition).forEach(varDefinition -> varDefinition.accept(this, param));
+        cG.call("main");
+        cG.halt();
+        program.definitions.stream().filter(definition -> definition instanceof FuncDefinition).forEach(funcDefinition -> funcDefinition.accept(this, param));
         return null;
     }
 
@@ -50,6 +77,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(VarDefinition varDefinition, Void param) {
+        cG.write("\' " + varDefinition.getType() + " (offset " + varDefinition.getOffset() + ")");
         return null;
     }
 
@@ -61,15 +89,21 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(Assignment assignment, Void param) {
+        assignment.left.accept(addressCGVisitor, param);
+        assignment.right.accept(valueCGVisitor, param);
+        cG.store(assignment.left.getType().suffix());
         return null;
     }
 
     /**
      * execute[[ FunctionInvocation functionInvocation : var expressions* ]] =
-     * expressions*.forEach()
+     * expressions*.forEach(expression => value[[ expression ]])
+     * <call> var.definition.name
      */
     @Override
     public Void visit(FunctionInvocation functionInvocation, Void param) {
+        functionInvocation.arguments.forEach(argument -> argument.accept(valueCGVisitor, param));
+        cG.call(functionInvocation.name.name);
         return null;
     }
 
@@ -95,51 +129,6 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     @Override
     public Void visit(While while_statement, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(ArrayType arrayType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(CharType charType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(DoubleType doubleType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(FunctionType functionType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(IntType intType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(RecordField recordField, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(StructType structType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(VoidType voidType, Void param) {
-        return null;
-    }
-
-    @Override
-    public Void visit(ErrorType errorType, Void param) {
         return null;
     }
 

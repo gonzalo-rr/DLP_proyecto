@@ -102,4 +102,9 @@ public class IntType extends AbstractType implements Type {
         return "IntType";
     }
 
+    @Override
+    public char suffix() {
+        return 'i';
+    }
+
 }
