@@ -11,6 +11,9 @@ public class FuncDefinition extends AbstractNode implements Definition {
     private int scope;
     public List<Statement> statements;
 
+    public int paramBytesSum;
+    public int localBytesSum;
+
     public FuncDefinition(String name, Type functionType, List<Statement> statements, int line, int column) {
         super(line, column);
         this.name = name;

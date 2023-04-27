@@ -21,15 +21,20 @@ public class OffSetVisitor implements Visitor<Void, Void> {
         localBytesSum = 0;
         funcDefinition.statements.forEach(statement -> statement.accept(this, param));
 
-        int paramBytesSum = 0;
+        funcDefinition.localBytesSum = localBytesSum;
+
+        int paramBytesSum = 4;
 
         List<VarDefinition> params = ((FunctionType) funcDefinition.getType()).params;
 
         for (int i = params.size() - 1; i >= 0; i--) {
             VarDefinition varDefinition = params.get(i);
-            varDefinition.setOffset(4 + paramBytesSum);
+            varDefinition.setOffset(paramBytesSum);
             paramBytesSum += varDefinition.type.numberOfBytes();
         }
+
+        funcDefinition.paramBytesSum = paramBytesSum;
+
         return null;
     }
 

@@ -13,7 +13,7 @@ public class Comparison extends AbstractExpression implements Expression {
         super(line, column);
         this.left = left;
         this.operation = operation;
-        this.right =right;
+        this.right = right;
     }
 
     @Override

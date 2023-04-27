@@ -2,6 +2,8 @@ package codegenerator;
 
 import ast.VarDefinition;
 import ast.expression.*;
+import ast.type.RecordField;
+import ast.type.StructType;
 import visitor.AbstractCGVisitor;
 
 // SOLO L-VALUES (Var, ArrayAccess, StructAccess)
@@ -14,31 +16,37 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
         this.cG = cG;
     }
 
-    // TODO
     /**
      * address[[ ArrayAccess : exp1 -> exp2 exp3 ]] =
-     * if (exp2.type == ArrayAccess)
-     *  address[[ exp2 ]]
-     * else
-     *  address[[ exp2 ]]
-     *  value[[ exp3 ]]
-     *  exp2.definition.type.numberOfBytes()
-     *  <muli>
-     *  <addi>
+     * address[[ exp2 ]]
+     * value[[ exp3 ]]
+     * <pushi> exp1.getType().numberOfBytes()
+     * <muli>
+     * <addi>
      */
     @Override
     public Void visit(ArrayAccess arrayAccess, Void param) {
+        arrayAccess.array.accept(this, param);
+        arrayAccess.index.accept(valueCGVisitor, param);
+        cG.pushi(arrayAccess.getType().numberOfBytes());
+        cG.mul('i');
+        cG.add('i');
         return null;
     }
 
     /**
      * address[[ StructAccess : exp1 -> exp2 ID ]] =
      * address[[ exp2 ]]
-     * <pushi> exp2.definition.type.recordField*.get(ID).offset
+     * <pushi> exp2.definition.getType().recordField*.get(ID).offset
      * <addi>
      */
     @Override
     public Void visit(StructAccess structAccess, Void param) {
+        structAccess.struct.accept(this, param);
+        RecordField recordField = ((StructType) structAccess.struct.getType()).recordFieldList.stream()
+                .filter(rF -> rF.name == structAccess.id).findFirst().get();
+        cG.pushi(recordField.getOffset());
+        cG.add('i');
         return null;
     }
 

@@ -17,108 +17,58 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * value[[ Arithmetic : exp1 -> exp2 exp3 ]] =
+     * value[[ Arithmetic : exp1 -> exp2 OP exp3 ]] =
      * value[[ exp2 ]]
+     * cG.convert(exp2.getType(), exp1.getType())
      * value[[ exp3 ]]
-     * <add> | <mul> | ...
+     * cG.convert(exp3.getType(), exp1.getType())
+     * cG.arithmetic(OP, exp1.getType())
      */
     @Override
     public Void visit(Arithmetic arithmetic, Void param) {
         arithmetic.left.accept(this, param);
+        cG.convert(arithmetic.left.getType(), arithmetic.getType());
         arithmetic.right.accept(this, param);
-        switch (arithmetic.operation) {
-            case "+": {
-                cG.add(arithmetic.type.suffix());
-                break;
-            }
-            case "-": {
-                cG.sub(arithmetic.type.suffix());
-                break;
-            }
-            case "*": {
-                cG.mul(arithmetic.type.suffix());
-                break;
-            }
-            case "/": {
-                cG.div(arithmetic.type.suffix());
-                break;
-            }
-            case "%": {
-                cG.mod(arithmetic.type.suffix());
-                break;
-            }
-        }
+        cG.convert(arithmetic.right.getType(), arithmetic.getType());
+        cG.arithmetic(arithmetic.operation, arithmetic.getType());
         return null;
     }
 
     /**
      * value[[ ArrayAccess : exp1 -> exp2 exp3 ]] =
      * address[[ exp1 ]]
-     * <load>
+     * cG.load(exp1.getType().suffix())
      */
     @Override
     public Void visit(ArrayAccess arrayAccess, Void param) {
         arrayAccess.accept(addressCGVisitor, param);
-        cG.load(arrayAccess.type.suffix());
+        cG.load(arrayAccess.getType().suffix());
         return null;
     }
 
     /**
      * value[[ Cast : exp1 -> type exp2 ]] =
      * value[[ exp2 ]]
-     * <x2y>
+     * cG.convert(exp2.getType(), exp1.getType())
      */
     @Override
     public Void visit(Cast cast, Void param) {
         cast.expression.accept(this, param);
-        if (cast.expression.getType() instanceof CharType && cast.type instanceof IntType) {
-            cG.b2i();
-        } else if (cast.expression.getType() instanceof IntType && cast.type instanceof FloatType) {
-            cG.i2f();
-        } else if (cast.expression.getType() instanceof FloatType && cast.type instanceof IntType) {
-            cG.f2i();
-        } else if (cast.expression.getType() instanceof IntType && cast.type instanceof CharType) {
-            cG.i2b();
-        }
+        cG.convert(cast.expression.getType(), cast.type);
         return null;
     }
 
     /**
-     * value[[ Comparison : exp1 -> exp2 exp3 ]] =
+     * value[[ Comparison : exp1 -> exp2 OP exp3 ]] =
      * value[[ exp2 ]]
      * value[[ exp3 ]]
-     * <gt> | <lt> | ...
+     * cG.compare(OP, exp2.getType())
      */
     @Override
     public Void visit(Comparison comparison, Void param) {
         comparison.left.accept(this, param);
         comparison.right.accept(this, param);
-        switch (comparison.operation) {
-            case ">": {
-                cG.gt(comparison.type.suffix());
-                break;
-            }
-            case "<": {
-                cG.lt(comparison.type.suffix());
-                break;
-            }
-            case ">=": {
-                cG.ge(comparison.type.suffix());
-                break;
-            }
-            case "<=": {
-                cG.le(comparison.type.suffix());
-                break;
-            }
-            case "==": {
-                cG.eq(comparison.type.suffix());
-                break;
-            }
-            case "!=": {
-                cG.ne(comparison.type.suffix());
-                break;
-            }
-        }
+        cG.compare(comparison.operation, comparison.left.getType());
         return null;
     }
 
@@ -153,25 +103,16 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * value[[ Logical : exp1 -> exp2 exp3 ]] =
+     * value[[ Logical : exp1 -> exp2 OP exp3 ]] =
      * value[[ exp2 ]]
      * value[[ exp3 ]]
-     * <not> | <or> | ...
+     * cG.logical(OP);
      */
     @Override
     public Void visit(Logical logical, Void param) {
         logical.left.accept(this, param);
         logical.right.accept(this, param);
-        switch (logical.operation) {
-            case "&&": {
-                cG.and();
-                break;
-            }
-            case "||": {
-                cG.or();
-                break;
-            }
-        }
+        cG.logical(logical.operation);
         return null;
     }
 

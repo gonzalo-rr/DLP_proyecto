@@ -1,5 +1,10 @@
 package codegenerator;
 
+import ast.Type;
+import ast.type.CharType;
+import ast.type.IntType;
+import com.sun.jdi.FloatType;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -250,4 +255,85 @@ public class CodeGenerator {
         out.flush();
     }
 
+    // Utilities
+
+    public void convert(Type type1, Type type2) {
+        if (type1 instanceof CharType && type2 instanceof IntType) {
+            out.println("b2i");
+        } else if (type1 instanceof IntType && type2 instanceof FloatType) {
+            out.println("i2f");
+        } else if (type1 instanceof FloatType && type2 instanceof IntType) {
+            out.println("f2i");
+        } else if (type1 instanceof IntType && type2 instanceof CharType) {
+            out.println("i2b");
+        }
+        out.flush();
+    }
+
+    public void arithmetic(String operation, Type type) {
+        switch (operation) {
+            case "+": {
+                add(type.suffix());
+                break;
+            }
+            case "-": {
+                sub(type.suffix());
+                break;
+            }
+            case "*": {
+                mul(type.suffix());
+                break;
+            }
+            case "/": {
+                div(type.suffix());
+                break;
+            }
+            case "%": {
+                mod(type.suffix());
+                break;
+            }
+        }
+    }
+
+    public void compare(String operation, Type type) {
+        switch (operation) {
+            case ">": {
+                gt(type.suffix());
+                break;
+            }
+            case "<": {
+                lt(type.suffix());
+                break;
+            }
+            case ">=": {
+                ge(type.suffix());
+                break;
+            }
+            case "<=": {
+                le(type.suffix());
+                break;
+            }
+            case "==": {
+                eq(type.suffix());
+                break;
+            }
+            case "!=": {
+                ne(type.suffix());
+                break;
+            }
+        }
+    }
+
+    public void logical(String operation) {
+        switch (operation) {
+            case "&&": {
+                and();
+                break;
+            }
+            case "||": {
+                or();
+                break;
+            }
+        }
+    }
 }
