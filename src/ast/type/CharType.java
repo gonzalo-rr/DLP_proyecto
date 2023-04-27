@@ -37,6 +37,9 @@ public class CharType extends AbstractType implements Type {
         if (type instanceof CharType) {
             return CharType.getInstance();
         }
+        if (type instanceof DoubleType) {
+            return DoubleType.getInstance();
+        }
         return super.canBeCastTo(type, node);
     }
 

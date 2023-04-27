@@ -43,7 +43,7 @@ public class CodeGenerator {
     // Push
 
     public void pushb(char character) {
-        out.println("pushb " + character);
+        out.println("pushb " + (int) character);
         out.flush();
     }
 
@@ -258,15 +258,21 @@ public class CodeGenerator {
     // Utilities
 
     public void convert(Type type1, Type type2) {
-        if (type1 instanceof CharType && type2 instanceof IntType) {
-            out.println("b2i");
+        if (type1 instanceof IntType && type2 instanceof CharType) {
+            out.println("i2b");
         } else if (type1 instanceof IntType && type2 instanceof FloatType) {
+            out.println("i2f");
+        } else if (type1 instanceof CharType && type2 instanceof IntType) {
+            out.println("b2i");
+        } else if (type1 instanceof CharType && type2 instanceof FloatType) {
+            out.println("b2i");
             out.println("i2f");
         } else if (type1 instanceof FloatType && type2 instanceof IntType) {
             out.println("f2i");
-        } else if (type1 instanceof IntType && type2 instanceof CharType) {
+        } else if (type1 instanceof FloatType && type2 instanceof CharType) {
+            out.println("f2i");
             out.println("i2b");
-        }
+        } else
         out.flush();
     }
 

@@ -5,15 +5,16 @@ import ast.Program;
 import ast.Statement;
 import ast.VarDefinition;
 import ast.statement.*;
+import ast.type.FunctionType;
 import visitor.AbstractCGVisitor;
 
 import java.util.List;
 
 public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
-    private CodeGenerator cG;
-    private AddressCGVisitor addressCGVisitor;
-    private ValueCGVisitor valueCGVisitor;
+    private final CodeGenerator cG;
+    private final AddressCGVisitor addressCGVisitor;
+    private final ValueCGVisitor valueCGVisitor;
 
     public ExecuteCGVisitor(CodeGenerator cG) {
         this.cG = cG;
@@ -24,13 +25,19 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         valueCGVisitor.addressCGVisitor = addressCGVisitor;
     }
 
+    // TODO
     /**
-     * execute[[ FuncDefinition : funcDefinition -> ID type definitions* statements* ]] =
+     * execute[[ FuncDefinition : funcDefinition -> ID type statements* ]] =
      * ID:
-     * definitions*.forEach(definition => execute[[ definition ]])
-     * <enter> definitions*.stream().filter(definition => definition.offset < 0).reduce(0, (definition1, definition2) => definition1.type.numberOfBytes() + definition2.type.numberOfBytes())
-     * statements*.forEach(statement => execute[[ statement ]])
-     * <ret> type.numberOfBytes(), definitions*.stream().filter(definition => definition.offset < 0).reduce(0, (definition1, definition2) => definition1.type.numberOfBytes() + definition2.type.numberOfBytes()), definitions*.stream().filter(definition => definition.offset > 0).reduce(0, (definition1, definition2) => definition1.type.numberOfBytes() + definition2.type.numberOfBytes())
+     * ' Parameters
+     * statements*.filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).filter(varDefinition -> varDefinition.getOffset() > 0).forEach(parameter -> execute[[ parameter ]])
+     * ' Local Variables
+     * statements*.filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).filter(varDefinition -> varDefinition.getOffset() > 0).forEach(localVariable -> execute[[ localVariable ]])
+     * <enter> funcDefinition.localBytesSum
+     * int returnBytes = type.returnType.numberOfBytes()
+     * statements*.filter(statement -> !(statement instanceof VarDefinition)).forEach(statement => execute[[ statement ]]( returnBytes, localBytes, paramBytes ))
+     * if (returnBytes == 0) // Type Void
+     *  <ret> 0, funcDefinition.localBytesSum, funcDefinition.paramBytes
      */
     @Override
     public Void visit(FuncDefinition funcDefinition, Void param) {
@@ -42,25 +49,32 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         List<VarDefinition> paramDefinitions = varDefinitions.stream().filter(varDefinition -> varDefinition.getOffset() > 0).toList();
         List<VarDefinition> localDefinitions = varDefinitions.stream().filter(varDefinition -> varDefinition.getOffset() < 0).toList();
 
-        cG.write("\' Parameters");
+        cG.write("' Parameters");
         paramDefinitions.forEach(varDefinition -> varDefinition.accept(this, param));
-        cG.write("\' LocalVariables");
+        cG.write("' LocalVariables");
         localDefinitions.forEach(varDefinition -> varDefinition.accept(this, param));
 
-        cG.enter(localDefinitions.stream().map(varDefinition -> varDefinition.type.numberOfBytes()).reduce(0, Integer::sum));
+        cG.enter(funcDefinition.localBytes);
 
-        statements.forEach(statement -> statement.accept(this, param));
+        int returnBytes = ((FunctionType) funcDefinition.getType()).returnType.numberOfBytes();
 
-        cG.ret(funcDefinition.getType().numberOfBytes(), localDefinitions.stream().map(varDefinition -> varDefinition.type.numberOfBytes()).reduce(0, Integer::sum), paramDefinitions.stream().map(varDefinition -> varDefinition.type.numberOfBytes()).reduce(0, Integer::sum));
+        statements.forEach(statement -> {
+            cG.write("#line: " + statement.getLine());
+            statement.accept(this, param);
+        });
+
+        if (returnBytes == 0) {
+            cG.ret(0, funcDefinition.localBytes, funcDefinition.paramBytes);
+        }
         return null;
     }
 
     /**
-     * execute[[ Program : program -> varDefinitions* functionDefinitions* ]] =
-     * varDefinitions*.forEach(varDefinition => execute[[ varDefinition ]]) // para comentarios de variables
+     * execute[[ Program : program -> definitions* ]] =
+     * definitions*.stream().filter(definition => definition instanceof VarDefinition).forEach(varDefinition => execute[[ varDefinition ]]) // para comentarios de variables
      * <call> main
      * <halt>
-     * definitions*.forEach(functionDefinition => execute[[ functionDefinition ]]) // para etiquetas y código
+     * definitions*.stream().filter(definition => definition instanceof FuncDefinition).forEach(functionDefinition => execute[[ functionDefinition ]]) // para etiquetas y código
      */
     @Override
     public Void visit(Program program, Void param) {
@@ -77,7 +91,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(VarDefinition varDefinition, Void param) {
-        cG.write("\' " + varDefinition.getType() + " (offset " + varDefinition.getOffset() + ")");
+        cG.write("' " + varDefinition.getType() + " " + varDefinition.name + " (offset " + varDefinition.getOffset() + ")");
         return null;
     }
 
@@ -85,10 +99,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      * execute[[ Assignment : statement -> exp1 exp2 ]] =
      * address[[ exp1 ]]
      * value[[ exp2 ]]
-     * <store>
+     * cG.store(exp1.getType().suffix())
      */
     @Override
     public Void visit(Assignment assignment, Void param) {
+        cG.write("' Assignment");
         assignment.left.accept(addressCGVisitor, param);
         assignment.right.accept(valueCGVisitor, param);
         cG.store(assignment.left.getType().suffix());
@@ -112,18 +127,41 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         return null;
     }
 
+    /**
+     * execute[[ Input input -> exp ]]
+     * address[[ exp ]]
+     * cG.in(exp.getType().suffix())
+     * store(exp.getType().suffix())
+     */
     @Override
     public Void visit(Input input, Void param) {
+        cG.write("' Read");
+        input.expression.accept(addressCGVisitor, param);
+        cG.in(input.expression.getType().suffix());
+        cG.store(input.expression.getType().suffix());
         return null;
     }
 
+    /**
+     * execute[[ Print print -> exp ]]
+     * value[[ exp ]]
+     * cG.out(exp.getType().suffix())
+     */
     @Override
     public Void visit(Print print, Void param) {
+        cG.write("' Write");
+        print.expression.accept(valueCGVisitor, param);
+        cG.out(print.expression.getType().suffix());
         return null;
     }
 
+    /**
+     * execute[[ Return : statement -> exp ]]( returnBytes, localBytes, paramBytes ) =
+     * <ret> returnBytes, localBytes, paramBytes
+     */
     @Override
     public Void visit(Return return_statement, Void param) {
+        //cG.ret();
         return null;
     }
 

@@ -21,7 +21,7 @@ public class OffSetVisitor implements Visitor<Void, Void> {
         localBytesSum = 0;
         funcDefinition.statements.forEach(statement -> statement.accept(this, param));
 
-        funcDefinition.localBytesSum = localBytesSum;
+        funcDefinition.localBytes = localBytesSum;
 
         int paramBytesSum = 4;
 
@@ -33,7 +33,7 @@ public class OffSetVisitor implements Visitor<Void, Void> {
             paramBytesSum += varDefinition.type.numberOfBytes();
         }
 
-        funcDefinition.paramBytesSum = paramBytesSum;
+        funcDefinition.paramBytes = paramBytesSum;
 
         return null;
     }

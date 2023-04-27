@@ -44,7 +44,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
     public Void visit(StructAccess structAccess, Void param) {
         structAccess.struct.accept(this, param);
         RecordField recordField = ((StructType) structAccess.struct.getType()).recordFieldList.stream()
-                .filter(rF -> rF.name == structAccess.id).findFirst().get();
+                .filter(rF -> rF.name.equals(structAccess.id)).findFirst().get();
         cG.pushi(recordField.getOffset());
         cG.add('i');
         return null;

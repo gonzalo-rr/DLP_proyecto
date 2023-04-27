@@ -6,13 +6,13 @@ import java.util.List;
 
 public class FuncDefinition extends AbstractNode implements Definition {
 
-    private String name;
-    private Type functionType;
+    private final String name;
+    private final Type functionType;
     private int scope;
     public List<Statement> statements;
 
-    public int paramBytesSum;
-    public int localBytesSum;
+    public int paramBytes;
+    public int localBytes;
 
     public FuncDefinition(String name, Type functionType, List<Statement> statements, int line, int column) {
         super(line, column);

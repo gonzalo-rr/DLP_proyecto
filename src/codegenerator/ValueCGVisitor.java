@@ -1,15 +1,13 @@
 package codegenerator;
 
 import ast.expression.*;
-import ast.type.CharType;
-import ast.type.IntType;
 import com.sun.jdi.FloatType;
 import visitor.AbstractCGVisitor;
 
 // SOLO EXPRESIONES
 public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
-    private CodeGenerator cG;
+    private final CodeGenerator cG;
     protected AddressCGVisitor addressCGVisitor;
 
     public ValueCGVisitor(CodeGenerator cG) {
@@ -120,19 +118,22 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      * value[[ MinusUnary exp1 -> exp2 ]] =
      * value[[ exp2 ]]
      * <pushi> -1
-     * <x2y>
-     * <mul>
+     * if (exp2 == FloatType)
+     *  <i2f>
+     *  <mulf>
+     * else
+     *  <mul
      */
     @Override
     public Void visit(MinusUnary minusUnary, Void param) {
         minusUnary.expression.accept(this, param);
         cG.pushi(-1);
-        boolean needsCast = false;
         if (minusUnary.expression instanceof FloatType) {
-            needsCast = true;
             cG.i2f();
+            cG.mul('f');
+        } else {
+            cG.mul('i');
         }
-        cG.mul(needsCast ? 'f' : 'i');
         return null;
     }
 
@@ -151,7 +152,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     /**
      * value[[ StructAccess : exp1 -> exp2 ID ]] =
      * address[[ exp2 ]]
-     * <load>
+     * cG.load(exp2.getType().suffix())
      */
     @Override
     public Void visit(StructAccess structAccess, Void param) {
@@ -163,7 +164,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     /**
      * value[[ Var : exp -> ID ]] =
      * address[[ exp ]]
-     * <load>
+     * cG.load(exp.getType().suffix());
      */
     @Override
     public Void visit(Var var, Void param) {
