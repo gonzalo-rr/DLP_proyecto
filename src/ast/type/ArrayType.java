@@ -22,7 +22,7 @@ public class ArrayType extends AbstractType implements Type {
     @Override
     public Type squareBrackets(Type type, ASTNode node) {
         if ((type instanceof IntType)) {
-            return type;
+            return this.type;
         }
         return super.squareBrackets(type, node);
     }

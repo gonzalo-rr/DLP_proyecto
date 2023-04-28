@@ -42,7 +42,15 @@ public class StructType extends AbstractType implements Type {
 
     @Override
     public String toString() {
-        return "StructType";
+        StringBuilder sB = new StringBuilder("StructType");
+        if (!recordFieldList.isEmpty()) {
+            sB.append("[recordFields=");
+            for (int i = 0; i < recordFieldList.size() - 1; i++) {
+                sB.append(recordFieldList.get(i)).append(",");
+            }
+            sB.append(recordFieldList.get(recordFieldList.size() - 1)).append("]");
+        }
+        return sB.toString();
     }
 
 }

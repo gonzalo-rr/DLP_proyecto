@@ -43,4 +43,10 @@ public class RecordField extends AbstractNode {
     public int hashCode() {
         return Objects.hash(name, type);
     }
+
+    @Override
+    public String toString() {
+        return "Field[name=" + name + ",type=" + type + ",offset=" + offset + "]";
+    }
+
 }

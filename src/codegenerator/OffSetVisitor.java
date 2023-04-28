@@ -33,6 +33,11 @@ public class OffSetVisitor implements Visitor<Void, Void> {
             paramBytesSum += varDefinition.type.numberOfBytes();
         }
 
+        // TODO: preguntar
+        if (paramBytesSum == 4) {
+            paramBytesSum = 0;
+        }
+
         funcDefinition.paramBytes = paramBytesSum;
 
         return null;

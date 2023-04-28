@@ -10,7 +10,6 @@ import java.io.PrintWriter;
 
 public class CodeGenerator {
 
-    private int labels = 0;
     private PrintWriter out;
     private int currentLabel = 0;
 
@@ -21,6 +20,7 @@ public class CodeGenerator {
             System.err.println("Error opening the file " + outputFilename + ".");
             System.exit(-1);
         }
+        out.println();
         this.source(sourceFilename);
     }
 
@@ -37,7 +37,8 @@ public class CodeGenerator {
     }
 
     public void line(int line) {
-        out.println("#line " + line);
+        out.println();
+        out.println("#line\t" + line);
         out.flush();
     }
 
@@ -247,6 +248,7 @@ public class CodeGenerator {
     }
 
     public void ret(int bytesToReturn, int bytesLocals, int bytesArguments) {
+        out.println();
         out.println("ret " + bytesToReturn + ", " + bytesLocals + ", " + bytesArguments);
         out.flush();
     }

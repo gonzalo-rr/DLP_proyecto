@@ -55,6 +55,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         localDefinitions.forEach(varDefinition -> varDefinition.accept(this, param));
 
         cG.enter(funcDefinition.localBytes);
+        cG.write("");
 
         int returnBytes = ((FunctionType) funcDefinition.getType()).returnType.numberOfBytes();
 
@@ -79,9 +80,12 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     @Override
     public Void visit(Program program, Void param) {
         program.definitions.stream().filter(definition -> definition instanceof VarDefinition).forEach(varDefinition -> varDefinition.accept(this, param));
+        cG.write("");
         cG.call("main");
         cG.halt();
+        cG.write("");
         program.definitions.stream().filter(definition -> definition instanceof FuncDefinition).forEach(funcDefinition -> funcDefinition.accept(this, param));
+        cG.write("");
         return null;
     }
 
@@ -91,7 +95,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(VarDefinition varDefinition, Void param) {
-        cG.write("' " + varDefinition.getType() + " " + varDefinition.name + " (offset " + varDefinition.getOffset() + ")");
+        cG.write("\t' " + varDefinition.getType() + " " + varDefinition.name + " (offset " + varDefinition.getOffset() + ")");
         return null;
     }
 
