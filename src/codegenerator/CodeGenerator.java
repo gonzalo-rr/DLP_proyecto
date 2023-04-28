@@ -2,8 +2,8 @@ package codegenerator;
 
 import ast.Type;
 import ast.type.CharType;
+import ast.type.DoubleType;
 import ast.type.IntType;
-import com.sun.jdi.FloatType;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +12,7 @@ public class CodeGenerator {
 
     private int labels = 0;
     private PrintWriter out;
+    private int currentLabel = 0;
 
     public CodeGenerator(String outputFilename, String sourceFilename) {
         try {
@@ -174,14 +175,14 @@ public class CodeGenerator {
     // Input (b, i, f)
 
     public void in(char suffix) {
-        out.println("in");
+        out.println("in" + suffix);
         out.flush();
     }
 
     // Output (b, i, f)
 
     public void out(char suffix) {
-        out.println("out");
+        out.println("out" + suffix);
         out.flush();
     }
 
@@ -209,21 +210,21 @@ public class CodeGenerator {
 
     // Jumps
 
-    public String getLabel() {
-        return "";
+    public int getLabel() {
+        return currentLabel++;
     }
 
-    public void jmp(String label) {
+    public void jmp(int label) {
         out.println("jmp " + label);
         out.flush();
     }
 
-    public void jz(String label) {
+    public void jz(int label) {
         out.println("jz " + label);
         out.flush();
     }
 
-    public void jnz(String label) {
+    public void jnz(int label) {
         out.println("jnz " + label);
         out.flush();
     }
@@ -260,16 +261,16 @@ public class CodeGenerator {
     public void convert(Type type1, Type type2) {
         if (type1 instanceof IntType && type2 instanceof CharType) {
             out.println("i2b");
-        } else if (type1 instanceof IntType && type2 instanceof FloatType) {
+        } else if (type1 instanceof IntType && type2 instanceof DoubleType) {
             out.println("i2f");
         } else if (type1 instanceof CharType && type2 instanceof IntType) {
             out.println("b2i");
-        } else if (type1 instanceof CharType && type2 instanceof FloatType) {
+        } else if (type1 instanceof CharType && type2 instanceof DoubleType) {
             out.println("b2i");
             out.println("i2f");
-        } else if (type1 instanceof FloatType && type2 instanceof IntType) {
+        } else if (type1 instanceof DoubleType && type2 instanceof IntType) {
             out.println("f2i");
-        } else if (type1 instanceof FloatType && type2 instanceof CharType) {
+        } else if (type1 instanceof DoubleType && type2 instanceof CharType) {
             out.println("f2i");
             out.println("i2b");
         } else

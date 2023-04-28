@@ -27,15 +27,15 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     // TODO
     /**
-     * execute[[ FuncDefinition : funcDefinition -> ID type statements* ]] =
+     * execute[[ FuncDefinition : funcDefinition -> ID type statement* ]] =
      * ID:
      * ' Parameters
-     * statements*.filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).filter(varDefinition -> varDefinition.getOffset() > 0).forEach(parameter -> execute[[ parameter ]])
+     * statement*.filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).filter(varDefinition -> varDefinition.getOffset() > 0).forEach(parameter -> execute[[ parameter ]])
      * ' Local Variables
-     * statements*.filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).filter(varDefinition -> varDefinition.getOffset() > 0).forEach(localVariable -> execute[[ localVariable ]])
+     * statement*.filter(statement -> statement instanceof VarDefinition).map(statement -> (VarDefinition) statement).filter(varDefinition -> varDefinition.getOffset() > 0).forEach(localVariable -> execute[[ localVariable ]])
      * <enter> funcDefinition.localBytesSum
      * int returnBytes = type.returnType.numberOfBytes()
-     * statements*.filter(statement -> !(statement instanceof VarDefinition)).forEach(statement => execute[[ statement ]]( returnBytes, localBytes, paramBytes ))
+     * statement*.filter(statement -> !(statement instanceof VarDefinition)).forEach(statement => execute[[ statement ]]( returnBytes, localBytes, paramBytes ))
      * if (returnBytes == 0) // Type Void
      *  <ret> 0, funcDefinition.localBytesSum, funcDefinition.paramBytes
      */
@@ -59,7 +59,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         int returnBytes = ((FunctionType) funcDefinition.getType()).returnType.numberOfBytes();
 
         statements.forEach(statement -> {
-            cG.write("#line: " + statement.getLine());
+            cG.line(statement.getLine());
             statement.accept(this, param);
         });
 
@@ -70,11 +70,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[ Program : program -> definitions* ]] =
-     * definitions*.stream().filter(definition => definition instanceof VarDefinition).forEach(varDefinition => execute[[ varDefinition ]]) // para comentarios de variables
+     * execute[[ Program : program -> definition* ]] =
+     * definition*.stream().filter(definition => definition instanceof VarDefinition).forEach(varDefinition => execute[[ varDefinition ]]) // para comentarios de variables
      * <call> main
      * <halt>
-     * definitions*.stream().filter(definition => definition instanceof FuncDefinition).forEach(functionDefinition => execute[[ functionDefinition ]]) // para etiquetas y código
+     * definition*.stream().filter(definition => definition instanceof FuncDefinition).forEach(functionDefinition => execute[[ functionDefinition ]]) // para etiquetas y código
      */
     @Override
     public Void visit(Program program, Void param) {
@@ -111,8 +111,8 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * execute[[ FunctionInvocation functionInvocation : var expressions* ]] =
-     * expressions*.forEach(expression => value[[ expression ]])
+     * execute[[ FunctionInvocation functionInvocation : var expression* ]] =
+     * expression*.forEach(expression => value[[ expression ]])
      * <call> var.definition.name
      */
     @Override
@@ -122,8 +122,29 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         return null;
     }
 
+    /**
+     * execute[[ IfElse : statement1 -> exp statement2* statement3* ]] =
+     * int fail = cG.getLabel()
+     * int end = cG.getLabel()
+     * value[[ exp ]]
+     * <jz> fail
+     * statement2*.forEach(statement => execute[[ statement ]])
+     * <jmp> end
+     * <label> fail <:>
+     * statement3*.forEach(statement => execute[[ statement ]])
+     * <label> end <:>
+     */
     @Override
     public Void visit(IfElse ifElse, Void param) {
+        int fail = cG.getLabel();
+        int end = cG.getLabel();
+        ifElse.condition.accept(valueCGVisitor, param);
+        cG.jz(fail);
+        ifElse.ifBody.forEach(statement -> statement.accept(this, param));
+        cG.jmp(end);
+        cG.addLabel(fail + "");
+        ifElse.elseBody.forEach(statement -> statement.accept(this, param));
+        cG.addLabel(end + "");
         return null;
     }
 
@@ -165,8 +186,27 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<Void, Void> {
         return null;
     }
 
+    /**
+     * execute[[ While : statement -> exp statement* ]]
+     * int condition = cG.getLabel()
+     * int end = cG.getLabel()
+     * <label> condition <:>
+     * value[[ exp ]]
+     * <jz> end
+     * statement*.forEach(statement => execute[[ statement ]]
+     * <jmp> condition
+     * <label> end <:>
+     */
     @Override
     public Void visit(While while_statement, Void param) {
+        int condition = cG.getLabel();
+        int end = cG.getLabel();
+        cG.addLabel(condition + "");
+        while_statement.condition.accept(valueCGVisitor, param);
+        cG.jz(end);
+        while_statement.body.forEach(statement -> statement.accept(this, param));
+        cG.jmp(condition);
+        cG.addLabel(end + "");
         return null;
     }
 

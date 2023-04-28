@@ -1,6 +1,7 @@
 package codegenerator;
 
 import ast.expression.*;
+import ast.type.IntType;
 import com.sun.jdi.FloatType;
 import visitor.AbstractCGVisitor;
 
@@ -118,22 +119,15 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      * value[[ MinusUnary exp1 -> exp2 ]] =
      * value[[ exp2 ]]
      * <pushi> -1
-     * if (exp2 == FloatType)
-     *  <i2f>
-     *  <mulf>
-     * else
-     *  <mul
+     * cG.convert(IntType.getInstance(), exp1.getType())
+     * cG.mul(exp1.getType())
      */
     @Override
     public Void visit(MinusUnary minusUnary, Void param) {
         minusUnary.expression.accept(this, param);
         cG.pushi(-1);
-        if (minusUnary.expression instanceof FloatType) {
-            cG.i2f();
-            cG.mul('f');
-        } else {
-            cG.mul('i');
-        }
+        cG.convert(IntType.getInstance(), minusUnary.getType());
+        cG.mul(minusUnary.getType().suffix());
         return null;
     }
 
