@@ -1,9 +1,10 @@
-c: char;
-i: int;
-r: double;
 
 def main(): {
-	a, i:int;
-	
-	r=3.5;
+	date:struct {
+    		day, month, year:int;
+    	};
+
+    date.day = 666;
+    date.month = 666;
+    date.year = 666;
 }

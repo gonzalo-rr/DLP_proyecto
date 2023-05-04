@@ -2,6 +2,8 @@ package codegenerator;
 
 import ast.expression.*;
 import ast.type.IntType;
+import ast.type.RecordField;
+import ast.type.StructType;
 import com.sun.jdi.FloatType;
 import visitor.AbstractCGVisitor;
 
@@ -146,12 +148,12 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     /**
      * value[[ StructAccess : exp1 -> exp2 ID ]] =
      * address[[ exp2 ]]
-     * cG.load(exp2.getType().suffix())
+     * cG.load(exp2.getType().recordField*.get(ID).suffix())
      */
     @Override
     public Void visit(StructAccess structAccess, Void param) {
-        structAccess.struct.accept(addressCGVisitor, param);
-        cG.load(structAccess.struct.getType().suffix());
+        structAccess.accept(addressCGVisitor, param); // OJO: structAccess.struct.accept(addressCGVisitor, param); [MAL]
+        cG.load(((StructType) structAccess.struct.getType()).recordFieldList.stream().filter(recordField -> recordField.name.equals(structAccess.id)).findFirst().get().type.suffix());
         return null;
     }
 
