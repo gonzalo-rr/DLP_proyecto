@@ -211,21 +211,21 @@ public class CodeGenerator {
 
     // Jumps
 
-    public int getLabel() {
-        return currentLabel++;
+    public String getLabel() {
+        return "label" + currentLabel++;
     }
 
-    public void jmp(int label) {
+    public void jmp(String label) {
         out.println("jmp " + label);
         out.flush();
     }
 
-    public void jz(int label) {
+    public void jz(String label) {
         out.println("jz " + label);
         out.flush();
     }
 
-    public void jnz(int label) {
+    public void jnz(String label) {
         out.println("jnz " + label);
         out.flush();
     }

@@ -1,10 +1,9 @@
 package codegenerator;
 
 import ast.expression.*;
+import ast.statement.FunctionInvocation;
 import ast.type.IntType;
-import ast.type.RecordField;
 import ast.type.StructType;
-import com.sun.jdi.FloatType;
 import visitor.AbstractCGVisitor;
 
 // SOLO EXPRESIONES
@@ -166,6 +165,16 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     public Void visit(Var var, Void param) {
         var.accept(addressCGVisitor, param);
         cG.load(var.getType().suffix());
+        return null;
+    }
+
+    /**
+     * value[[ FunctionInvocation : exp1 -> exp2 exp3* ]] =
+     * exp3*.forEach(arg => value[[ arg ]])
+     * <call> exp2.name
+     */
+    @Override
+    public Void visit(FunctionInvocation functionInvocation, Void param) {
         return null;
     }
 

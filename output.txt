@@ -126,14 +126,15 @@ pushi 0
 storei
 
 #line	20
-0:
+' While
+label0:
 pusha bp
 pushi -6
 addi
 loadi
 pushi 10
 lti
-jz 1
+jz label1
 ' Assignment
 pusha 0
 pusha bp
@@ -171,13 +172,14 @@ outf
 ' Write
 pushb 32
 outb
+' If
 pusha bp
 pushi -6
 addi
 loadi
 pushi 2
 modi
-jz 2
+jz label2
 ' Write
 pushb 111
 outb
@@ -190,9 +192,9 @@ outb
 ' Write
 pushb 10
 outb
-jmp 3
-2:
-3:
+jmp label3
+label2:
+label3:
 ' Write
 pushb 101
 outb
@@ -219,8 +221,8 @@ loadi
 pushi 1
 addi
 storei
-jmp 0
-1:
+jmp label0
+label1:
 
 #line	29
 ' Write
@@ -236,28 +238,30 @@ pushi 0
 storei
 
 #line	32
-4:
+' While
+label4:
 pusha bp
 pushi -6
 addi
 loadi
 pushi 4
 lti
-jz 5
+jz label5
 ' Assignment
 pusha bp
 pushi -8
 addi
 pushi 0
 storei
-6:
+' While
+label6:
 pusha bp
 pushi -8
 addi
 loadi
 pushi 5
 lti
-jz 7
+jz label7
 ' Assignment
 pusha bp
 pushi -48
@@ -320,8 +324,8 @@ loadi
 pushi 1
 addi
 storei
-jmp 6
-7:
+jmp label6
+label7:
 ' Write
 pushb 10
 outb
@@ -336,8 +340,8 @@ loadi
 pushi 1
 addi
 storei
-jmp 4
-5:
+jmp label4
+label5:
 
 ret 0, 54, 0
 
