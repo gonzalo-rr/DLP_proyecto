@@ -93,12 +93,29 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * value[[ LitDouble : exp -> INT_CONSTANT ]] =
+     * value[[ LitInt : exp -> INT_CONSTANT ]] =
      * <pushi> INT_CONSTANT
      */
     @Override
     public Void visit(LitInt litInt, Void param) {
         cG.pushi(litInt.val);
+        return null;
+    }
+
+    /**
+     * value[[ LitBool : exp -> BOOL_CONSTANT ]] =
+     * if (BOOL_CONSTANT)
+     *  <pushi 1>
+     * else
+     *  <pushi 0>
+     */
+    @Override
+    public Void visit(LitBool litBool, Void param) {
+        if (litBool.val) {
+            cG.pushi(1);
+        } else {
+            cG.pushi(0);
+        }
         return null;
     }
 

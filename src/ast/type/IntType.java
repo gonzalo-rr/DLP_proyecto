@@ -36,17 +36,9 @@ public class IntType extends AbstractType implements Type {
     }
 
     @Override
-    public Type logical(Type type, ASTNode node) {
-        if (type instanceof IntType) {
-            return IntType.getInstance();
-        }
-        return super.logical(type, node);
-    }
-
-    @Override
     public Type comparison(Type type, ASTNode node) {
         if (type instanceof IntType) {
-            return IntType.getInstance();
+            return BoolType.getInstance();
         }
         return super.comparison(type, node);
     }
@@ -66,11 +58,6 @@ public class IntType extends AbstractType implements Type {
     }
 
     @Override
-    public Type not(ASTNode node) {
-        return IntType.getInstance();
-    }
-
-    @Override
     public Type minusUnary(ASTNode node) {
         return IntType.getInstance();
     }
@@ -85,11 +72,6 @@ public class IntType extends AbstractType implements Type {
 
     @Override
     public Type asBuiltInType(ASTNode node) {
-        return IntType.getInstance();
-    }
-
-    @Override
-    public Type asLogical(ASTNode node) {
         return IntType.getInstance();
     }
 

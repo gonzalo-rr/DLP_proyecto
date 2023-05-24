@@ -72,6 +72,7 @@ register returns [List<RecordField> ast = new ArrayList<RecordField>()]: ids ':'
 simple_type returns [Type ast]: 'int' { $ast = IntType.getInstance(); }
       | 'char' { $ast = CharType.getInstance(); }
       | 'double' { $ast = DoubleType.getInstance(); }
+      | 'bool' { $ast = BoolType.getInstance(); }
       ;
 
 // Sentencias
@@ -107,6 +108,7 @@ separated_expressions returns [List<Expression> ast = new ArrayList<Expression>(
                        | expression ',' separated_expressions { $separated_expressions.ast.add(0, $expression.ast); $ast = $separated_expressions.ast; }
                        ;
 expression returns [Expression ast]: func_invocation { $ast = $func_invocation.ast; }
+            | BOOL_CONSTANT { $ast = new LitBool($BOOL_CONSTANT.getLine(), $BOOL_CONSTANT.getCharPositionInLine() + 1, LexerHelper.lexemeToBool($BOOL_CONSTANT.text)); }
             | INT_CONSTANT { $ast = new LitInt($INT_CONSTANT.getLine(), $INT_CONSTANT.getCharPositionInLine() + 1, LexerHelper.lexemeToInt($INT_CONSTANT.text)); }
             | CHAR_CONSTANT { $ast = new LitChar($CHAR_CONSTANT.getLine(), $CHAR_CONSTANT.getCharPositionInLine() + 1, LexerHelper.lexemeToChar($CHAR_CONSTANT.text)); }
             | REAL_CONSTANT { $ast = new LitDouble($REAL_CONSTANT.getLine(), $REAL_CONSTANT.getCharPositionInLine() + 1, LexerHelper.lexemeToReal($REAL_CONSTANT.text)); }
@@ -134,13 +136,14 @@ WS: [ \t\r\n]+ -> skip;
 SL_COMMENT: '#' .*? ('\n' | '\r' | EOF) -> skip;
 ML_COMMENT: '"""' .*? '"""' -> skip;
 
-ID: (LETTER | '_') (LETTER | DIGIT | '_')*;
+BOOL_CONSTANT: 'true' | 'false';
 INT_CONSTANT: '0' | [1-9] [0-9]*;
 REAL_CONSTANT:  E_DOUBLE
                 | DEFAULT_DOUBLE
                 | POINT_DOUBLE
                 | DOUBLE_POINT;
 CHAR_CONSTANT: '\'' (CHARACTER | ASCII | SPECIAL_CHAR) '\'';
+ID: (LETTER | '_') (LETTER | DIGIT | '_')*;
 
 
 fragment

@@ -66,6 +66,11 @@ public abstract class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(LitBool litBool, TP param) {
+        throw new IllegalStateException("It is not possible to generate code " + this.getClass() + " for " + litBool);
+    }
+
+    @Override
     public TR visit(Logical logical, TP param) {
         throw new IllegalStateException("It is not possible to generate code " + this.getClass() + " for " + logical);
     }
@@ -162,6 +167,11 @@ public abstract class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     @Override
     public TR visit(IntType intType, TP param) {
         throw new IllegalStateException("It is not possible to generate code " + this.getClass() + " for " + intType);
+    }
+
+    @Override
+    public TR visit(BoolType boolType, TP param) {
+        throw new IllegalStateException("It is not possible to generate code " + this.getClass() + " for " + boolType);
     }
 
     @Override

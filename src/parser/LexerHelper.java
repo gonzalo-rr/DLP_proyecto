@@ -45,4 +45,14 @@ public class LexerHelper {
 		return -1;
 	}
 
+	public static boolean lexemeToBool(String str) {
+		try {
+			return Boolean.parseBoolean(str);
+		}
+		catch(NumberFormatException e) {
+			System.out.println(e);
+		}
+		return false;
+	}
+
 }

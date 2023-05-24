@@ -32,6 +32,8 @@ public interface Visitor<TP, TR> {
 
     public TR visit(LitInt litInt, TP param);
 
+    public TR visit(LitBool litBool, TP param);
+
     public TR visit(Logical logical, TP param);
 
     public TR visit(MinusUnary minusUnary, TP param);
@@ -69,6 +71,8 @@ public interface Visitor<TP, TR> {
     public TR visit(FunctionType functionType, TP param);
 
     public TR visit(IntType intType, TP param);
+
+    public TR visit(BoolType boolType, TP param);
 
     public TR visit(RecordField recordField, TP param);
 

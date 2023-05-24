@@ -73,6 +73,11 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(LitBool litBool, TP param) {
+        return null;
+    }
+
+    @Override
     public TR visit(Logical logical, TP param) {
         logical.left.accept(this, param);
         logical.right.accept(this, param);
@@ -169,6 +174,11 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(DoubleType doubleType, TP param) {
+        return null;
+    }
+
+    @Override
+    public TR visit(BoolType boolType, TP param) {
         return null;
     }
 

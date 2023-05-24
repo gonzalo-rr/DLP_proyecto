@@ -5,10 +5,7 @@ import ast.FuncDefinition;
 import ast.errors.ErrorType;
 import ast.expression.*;
 import ast.statement.*;
-import ast.type.CharType;
-import ast.type.DoubleType;
-import ast.type.FunctionType;
-import ast.type.IntType;
+import ast.type.*;
 import visitor.AbstractVisitor;
 import visitor.Visitor;
 
@@ -76,6 +73,14 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
         super.visit(litInt, param);
         litInt.setLValue(false);
         litInt.setType(IntType.getInstance());
+        return null;
+    }
+
+    @Override
+    public Void visit(LitBool litBool, Void param) {
+        super.visit(litBool, param);
+        litBool.setLValue(false);
+        litBool.setType(BoolType.getInstance());
         return null;
     }
 

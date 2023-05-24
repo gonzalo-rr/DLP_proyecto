@@ -6,21 +6,22 @@ G = {
 	(4) LitInt: expr -> INT_CONSTANT
 	(5) LitDouble: expr -> REAL_CONSTANT
 	(6) LitChar: expr -> CHAR_CONSTANT
-	(7) StructAccess: expr1 -> expr2 ID
-	(8) Var: expr -> ID
-	(9) ArrayAccess: expr1 -> expr2 expr3
-	(10) Cast: expr1 -> type expr2
-	(11) Not: expr1 -> expr2
-	(12) MinusUnary: expr1 -> expr2
-	(13) FunctionInvocation: expr1 -> expr2 expr3*
-	(14) Assignment: stmnt -> expr1 expr2
-	(15) Print: stmnt -> expr
-	(16) Input: stmnt -> expr
-	(17) Return: stmnt -> expr
-	(18) IfElse: stmnt1 -> expr stmnt2* stmnt3*
-	(19) While: stmnt1 -> expr stmnt2*
-	(20) PlusEquals: stmnt -> expr1 expr2
-	(21) FuncDefinition: funcDefinition -> ID type stmnt*
+	(7) BoolType: expr -> BOOL_CONSTANT
+	(8) StructAccess: expr1 -> expr2 ID
+	(9) Var: expr -> ID
+	(10) ArrayAccess: expr1 -> expr2 expr3
+	(11) Cast: expr1 -> type expr2
+	(12) Not: expr1 -> expr2
+	(13) MinusUnary: expr1 -> expr2
+	(14) FunctionInvocation: expr1 -> expr2 expr3*
+	(15) Assignment: stmnt -> expr1 expr2
+	(16) Print: stmnt -> expr
+	(17) Input: stmnt -> expr
+	(18) Return: stmnt -> expr
+	(19) IfElse: stmnt1 -> expr stmnt2* stmnt3*
+	(20) While: stmnt1 -> expr stmnt2*
+	(21) PlusEquals: stmnt -> expr1 expr2
+	(22) FuncDefinition: funcDefinition -> ID type stmnt*
 
 }
 
@@ -34,23 +35,24 @@ R = {
 	(4) expr.type = IntType.getInstance()
 	(5) expr.type = DoubleType.getInstance()
 	(6) expr.type = CharType.getInstance()
-	(7) expr1.type = expr2.type.dot(ID)
-	(8) expr.type = definition.getType() // Ya ha pasado el 'Identification Visitor'
-	(9) expr1.type = expr2.type.squareBrackets(expr3.type)
-	(10) expr1.type = expr2.type.canBeCastTo(type)
-	(11) expr1.type = expr2.type.not()
-	(12) expr1.type = expr2.type.minusUnary()
-	(13) expr1.type = expr2.type.parenthesis(expr3*.stream().map(expr -> expr.type).toList())
-	(14) expr1.type.mustBeEquals(expr2.type)
-	(15) expr.type.mustBeBuiltInType()
+	(7) expr.type = BoolType.getInstance()
+	(8) expr1.type = expr2.type.dot(ID)
+	(9) expr.type = definition.getType() // Ya ha pasado el 'Identification Visitor'
+	(10) expr1.type = expr2.type.squareBrackets(expr3.type)
+	(11) expr1.type = expr2.type.canBeCastTo(type)
+	(12) expr1.type = expr2.type.not()
+	(13) expr1.type = expr2.type.minusUnary()
+	(14) expr1.type = expr2.type.parenthesis(expr3*.stream().map(expr -> expr.type).toList())
+	(15) expr1.type.mustBeEquals(expr2.type)
 	(16) expr.type.mustBeBuiltInType()
-	(17) expr.type.mustBeEquals(stmnt.returnType)
-	(18) expr.type.mustBeLogical()
-	     stmnt2*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
-	     stmnt3*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
+	(17) expr.type.mustBeBuiltInType()
+	(18) expr.type.mustBeEquals(stmnt.returnType)
 	(19) expr.type.mustBeLogical()
 	     stmnt2*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
-	(20) expr1.type.mustBeEquals(expr2.type)
-	(21) stmnt*.stream().forEach(stmnt -> stmnt.returnType = type.returnType)
+	     stmnt3*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
+	(20) expr.type.mustBeLogical()
+	     stmnt2*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
+	(21) expr1.type.mustBeEquals(expr2.type)
+	(22) stmnt*.stream().forEach(stmnt -> stmnt.returnType = type.returnType)
 
 }

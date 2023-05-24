@@ -9,7 +9,7 @@ halt
 	main:
 	' Parameters
 	' LocalVariables
-	' IntType a (offset -2)
+	' BoolType a (offset -2)
 enter	2
 	
 
@@ -18,27 +18,24 @@ enter	2
 pusha	bp
 pushi	-2
 addi
-pushi	4
+pushi	1
 storei
 
 #line	4
-pusha	bp
-pushi	-2
-addi
+	' If
 pusha	bp
 pushi	-2
 addi
 loadi
-pushi	1
-addi
-storei
-
-#line	5
+jz	label0
 	' Write
-pusha	bp
-pushi	-2
-addi
-loadi
-outi
+pushb	97
+outb
+jmp	label1
+label0:
+	' Write
+pushb	98
+outb
+label1:
 
 ret	0, 2, 0

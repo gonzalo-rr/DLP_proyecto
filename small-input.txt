@@ -1,6 +1,9 @@
 def main():{
-    a: int;
-    a = 4;
-    a += 1;
-    print a;
+    a: bool;
+    a = true;
+    if a: {
+        print 'a';
+    } else: {
+        print 'b';
+    }
 }
