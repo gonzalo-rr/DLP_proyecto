@@ -23,7 +23,13 @@ public class DoubleType extends AbstractType implements Type {
 
     @Override
     public Type arithmetic(Type type, ASTNode node) {
+        if (type instanceof IntType) {
+            return DoubleType.getInstance();
+        }
         if (type instanceof DoubleType) {
+            return DoubleType.getInstance();
+        }
+        if (type instanceof CharType) {
             return DoubleType.getInstance();
         }
         return super.arithmetic(type, node);
@@ -41,6 +47,12 @@ public class DoubleType extends AbstractType implements Type {
     public Type canBeCastTo(Type type, ASTNode node) {
         if (type instanceof DoubleType) {
             return DoubleType.getInstance();
+        }
+        if (type instanceof IntType) {
+            return IntType.getInstance();
+        }
+        if (type instanceof CharType) {
+            return CharType.getInstance();
         }
         return super.canBeCastTo(type, node);
     }

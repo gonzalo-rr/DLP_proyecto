@@ -9,7 +9,7 @@ import visitor.AbstractCGVisitor;
 // SOLO L-VALUES (Var, ArrayAccess, StructAccess)
 public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
 
-    private CodeGenerator cG;
+    private final CodeGenerator cG;
     protected ValueCGVisitor valueCGVisitor;
 
     public AddressCGVisitor(CodeGenerator cG) {
@@ -37,7 +37,7 @@ public class AddressCGVisitor extends AbstractCGVisitor<Void, Void> {
     /**
      * address[[ StructAccess : exp1 -> exp2 ID ]] =
      * address[[ exp2 ]]
-     * <pushi> exp2.definition.getType().recordField*.get(ID).offset
+     * <pushi> exp2.type.recordField*.get(ID).offset
      * <addi>
      */
     @Override

@@ -1,5 +1,6 @@
 package semantic;
 
+import ast.Definition;
 import ast.FuncDefinition;
 import ast.VarDefinition;
 import ast.errors.ErrorType;
@@ -42,13 +43,14 @@ public class IdentificationVisitor extends AbstractVisitor<Void, Void> implement
 
     @Override
     public Void visit(Var var, Void param) {
-        if (symbolTable.find(var.name) == null) {
+        Definition definition = symbolTable.find(var.name);
+        if (definition == null) {
             var.definition = new VarDefinition(var.name, new ErrorType(
                     "The Variable " + var.name + " is not defined in this scope",
                     var.getLine(), var.getColumn()), var.getLine(), var.getColumn());
             return null;
         } // Se asocia a una definición de tipo error
-        var.definition = symbolTable.find(var.name);
+        var.definition = definition;
         // Se asocia a una definición del tipo correspondiente
         return null;
     }

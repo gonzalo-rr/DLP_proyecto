@@ -1,347 +1,674 @@
 
-#source "input.1.txt"
-	' ArrayType[size=10,type=DoubleType] v (offset 0)
+#source "big.input.txt"
 
-call main
+	' StructType[recordFields=Field[name=integer,type=IntType,offset=0],Field[name=character,type=CharType,offset=2]] pair (offset 0)
+	' ArrayType[size=2,type=StructType[recordFields=Field[name=employees,type=ArrayType[size=2,type=StructType[recordFields=Field[name=age,type=IntType,offset=0]]],offset=0]]] acme (offset 3)
+	' ArrayType[size=8,type=ArrayType[size=3,type=IntType]] fibonacci (offset 11)
+
+call	main
 halt
 
-main:
-' Parameters
-' LocalVariables
-	' DoubleType value (offset -4)
-	' IntType i (offset -6)
-	' IntType j (offset -8)
-	' ArrayType[size=4,type=ArrayType[size=5,type=IntType]] w (offset -48)
-	' StructType[recordFields=Field[name=day,type=IntType,offset=0],Field[name=month,type=IntType,offset=2],Field[name=year,type=IntType,offset=4]] date (offset -54)
-enter 54
+#line	14
+	p:
+	' Parameters
+	' LocalVariables
+enter	0
+	
 
+ret	0, 0, 0
 
-#line	12
-' Read
-pusha bp
-pushi -54
+#line	16
+	f:
+	' Parameters
+	' DoubleType r (offset 6)
+	' IntType e (offset 4)
+	' LocalVariables
+	' DoubleType real (offset -4)
+	' CharType c (offset -5)
+	' IntType result (offset -7)
+enter	7
+	
+
+#line	20
+	' Assignment
+pusha	bp
+pushi	-4
 addi
-pushi 0
+pusha	bp
+pushi	6
 addi
-ini
+loadf
+pushf	10.0
+mulf
+storef
+
+#line	21
+	' Assignment
+pusha	bp
+pushi	-5
+addi
+pushb	48
+storeb
+
+#line	22
+	' If
+pusha	bp
+pushi	4
+addi
+loadi
+pushi	256
+lti
+jz	label0
+	' Assignment
+pusha	bp
+pushi	-5
+addi
+pusha	bp
+pushi	4
+addi
+loadi
+i2b
+storeb
+	' Assignment
+pusha	bp
+pushi	-7
+addi
+pusha	bp
+pushi	-5
+addi
+loadb
+b2i
+storei
+jmp	label1
+label0:
+label1:
+
+#line	27
+	' Assignment
+pusha	bp
+pushi	-7
+addi
+pusha	bp
+pushi	-4
+addi
+loadf
+f2i
 storei
 
-#line	13
-' Assignment
-pusha bp
-pushi -54
+#line	28
+pusha	bp
+pushi	-7
 addi
-pushi 4
+loadi
+
+ret	2, 7, 6
+
+#line	31
+	initialize:
+	' Parameters
+	' LocalVariables
+	' IntType i (offset -2)
+enter	2
+	
+
+#line	33
+	' Assignment
+pusha	11
+pushi	0
+pushi	6
+muli
 addi
-pushb 97
+pushi	0
+pushi	2
+muli
+addi
+pushi	0
+storei
+
+#line	34
+	' Assignment
+pusha	11
+pushi	0
+pushi	6
+muli
+addi
+pushi	1
+pushi	2
+muli
+addi
+pushi	1
+storei
+
+#line	35
+	' Assignment
+pusha	11
+pushi	0
+pushi	6
+muli
+addi
+pushi	2
+pushi	2
+muli
+addi
+pushi	1
+storei
+
+#line	36
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	1
+storei
+
+#line	37
+	' While
+label2:
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	8
+lti
+jz	label3
+	' Assignment
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	6
+muli
+addi
+pushi	0
+pushi	2
+muli
+addi
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+subi
+pushi	6
+muli
+addi
+pushi	1
+pushi	2
+muli
+addi
+loadi
+storei
+	' Assignment
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	6
+muli
+addi
+pushi	1
+pushi	2
+muli
+addi
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+subi
+pushi	6
+muli
+addi
+pushi	2
+pushi	2
+muli
+addi
+loadi
+storei
+	' Assignment
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	6
+muli
+addi
+pushi	2
+pushi	2
+muli
+addi
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	6
+muli
+addi
+pushi	0
+pushi	2
+muli
+addi
+loadi
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	6
+muli
+addi
+pushi	1
+pushi	2
+muli
+addi
+loadi
+addi
+storei
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label2
+label3:
+
+ret	0, 2, 0
+
+#line	47
+	main:
+	' Parameters
+	' LocalVariables
+	' IntType i (offset -2)
+	' IntType j (offset -4)
+enter	4
+	
+
+#line	49
+	' Function Invocation
+call	p
+
+#line	50
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	51
+	' Assignment
+pusha	0
+pushi	2
+addi
+pushb	48
+storeb
+
+#line	52
+	' Assignment
+pusha	0
+pushi	0
+addi
+pushb	48
 b2i
 storei
 
-#line	14
-' Assignment
-pusha bp
-pushi -54
-addi
-pushi 2
-addi
-pusha bp
-pushi -54
-addi
-pushi 0
-addi
-loadi
-pusha bp
-pushi -54
-addi
-pushi 4
-addi
-loadi
-muli
-pushi 12
-modi
-pushi 1
-addi
-storei
-
-#line	15
-' Write
-pusha bp
-pushi -54
-addi
-pushi 0
-addi
-loadi
-outi
-
-#line	15
-' Write
-pushb 10
-outb
-
-#line	15
-' Write
-pusha bp
-pushi -54
-addi
-pushi 2
-addi
-loadi
-outi
-
-#line	15
-' Write
-pushb 10
-outb
-
-#line	15
-' Write
-pusha bp
-pushi -54
-addi
-pushi 4
+#line	55
+	' Write
+pusha	bp
+pushi	-2
 addi
 loadi
 i2f
-outf
-
-#line	15
-' Write
-pushb 10
-outb
-
-#line	17
-' Read
-pusha bp
-pushi -4
+pusha	0
+pushi	2
 addi
-inf
-storef
-
-#line	19
-' Assignment
-pusha bp
-pushi -6
-addi
-pushi 0
-storei
-
-#line	20
-' While
-label0:
-pusha bp
-pushi -6
-addi
-loadi
-pushi 10
-lti
-jz label1
-' Assignment
-pusha 0
-pusha bp
-pushi -6
-addi
-loadi
-pushi 4
-muli
-addi
-pusha bp
-pushi -4
-addi
-loadf
-storef
-' Write
-pusha bp
-pushi -6
-addi
-loadi
+loadb
+b2i
+call	f
 outi
-' Write
-pushb 58
-outb
-' Write
-pusha 0
-pusha bp
-pushi -6
-addi
-loadi
-pushi 4
-muli
-addi
-loadf
-outf
-' Write
-pushb 32
-outb
-' If
-pusha bp
-pushi -6
-addi
-loadi
-pushi 2
-modi
-jz label2
-' Write
-pushb 111
-outb
-' Write
-pushb 100
-outb
-' Write
-pushb 100
-outb
-' Write
-pushb 10
-outb
-jmp label3
-label2:
-label3:
-' Write
-pushb 101
-outb
-' Write
-pushb 118
-outb
-' Write
-pushb 101
-outb
-' Write
-pushb 110
-outb
-' Write
-pushb 10
-outb
-' Assignment
-pusha bp
-pushi -6
-addi
-pusha bp
-pushi -6
-addi
-loadi
-pushi 1
-addi
-storei
-jmp label0
-label1:
 
-#line	29
-' Write
-pushb 10
+#line	55
+	' Write
+pushb	10
 outb
 
-#line	31
-' Assignment
-pusha bp
-pushi -6
+#line	56
+	' Function Invocation
+pushf	1.3
+pushi	2
+call	f
+popi
+
+#line	58
+	' Function Invocation
+call	initialize
+
+#line	59
+	' Assignment
+pusha	bp
+pushi	-2
 addi
-pushi 0
+pushi	0
 storei
 
-#line	32
-' While
+#line	60
+	' While
 label4:
-pusha bp
-pushi -6
+pusha	bp
+pushi	-2
 addi
 loadi
-pushi 4
+pushi	8
 lti
-jz label5
-' Assignment
-pusha bp
-pushi -8
-addi
-pushi 0
-storei
-' While
-label6:
-pusha bp
-pushi -8
+jz	label5
+	' Write
+pushb	40
+outb
+	' Write
+pusha	bp
+pushi	-2
 addi
 loadi
-pushi 5
-lti
-jz label7
-' Assignment
-pusha bp
-pushi -48
+pushi	1
 addi
-pusha bp
-pushi -6
+outi
+	' Write
+pushb	41
+outb
+	' Write
+pusha	11
+pusha	bp
+pushi	-2
 addi
 loadi
-pushi 10
+pushi	6
 muli
 addi
-pusha bp
-pushi -8
-addi
-loadi
-pushi 2
-muli
-addi
-pusha bp
-pushi -6
-addi
-loadi
-pusha bp
-pushi -8
-addi
-loadi
-addi
-storei
-' Write
-pusha bp
-pushi -48
-addi
-pusha bp
-pushi -6
-addi
-loadi
-pushi 10
-muli
-addi
-pusha bp
-pushi -8
-addi
-loadi
-pushi 2
+pushi	0
+pushi	2
 muli
 addi
 loadi
 outi
-' Write
-pushb 32
+	' Write
+pushb	43
 outb
-' Assignment
-pusha bp
-pushi -8
-addi
-pusha bp
-pushi -8
+	' Write
+pusha	11
+pusha	bp
+pushi	-2
 addi
 loadi
-pushi 1
+pushi	6
+muli
 addi
-storei
-jmp label6
-label7:
-' Write
-pushb 10
-outb
-' Assignment
-pusha bp
-pushi -6
-addi
-pusha bp
-pushi -6
+pushi	1
+pushi	2
+muli
 addi
 loadi
-pushi 1
+outi
+	' Write
+pushb	61
+outb
+	' Write
+pusha	11
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	6
+muli
+addi
+pushi	2
+pushi	2
+muli
+addi
+loadi
+outi
+	' Write
+pushb	10
+outb
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
 addi
 storei
-jmp label4
+jmp	label4
 label5:
 
-ret 0, 54, 0
+#line	68
+	' Assignment
+pusha	3
+pushi	1
+pushi	4
+muli
+addi
+pushi	0
+addi
+pushi	1
+pushi	2
+muli
+addi
+pushi	0
+addi
+pushi	56
+storei
 
+#line	70
+	' Write
+pusha	3
+pushi	1
+pushi	4
+muli
+addi
+pushi	0
+addi
+pushi	1
+pushi	2
+muli
+addi
+pushi	0
+addi
+loadi
+outi
+
+#line	70
+	' Write
+pushb	10
+outb
+
+#line	71
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	72
+	' While
+label6:
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	2
+lti
+jz	label7
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pushi	0
+storei
+	' While
+label8:
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	2
+lti
+jz	label9
+	' Assignment
+pusha	3
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	4
+muli
+addi
+pushi	0
+addi
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	2
+muli
+addi
+pushi	0
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pusha	bp
+pushi	-4
+addi
+loadi
+addi
+storei
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label8
+label9:
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label6
+label7:
+
+#line	81
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	82
+	' While
+label10:
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	2
+lti
+jz	label11
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pushi	0
+storei
+	' While
+label12:
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	2
+lti
+jz	label13
+	' Write
+pusha	3
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	4
+muli
+addi
+pushi	0
+addi
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	2
+muli
+addi
+pushi	0
+addi
+loadi
+outi
+	' Write
+pushb	32
+outb
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label12
+label13:
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label10
+label11:
+
+ret	0, 4, 0

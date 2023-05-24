@@ -23,6 +23,12 @@ public class CharType extends AbstractType implements Type {
 
     @Override
     public Type arithmetic(Type type, ASTNode node) {
+        if (type instanceof IntType) {
+            return IntType.getInstance();
+        }
+        if (type instanceof DoubleType) {
+            return DoubleType.getInstance();
+        }
         if (type instanceof CharType) {
             return IntType.getInstance();
         }

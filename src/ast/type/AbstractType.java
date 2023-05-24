@@ -52,7 +52,7 @@ public abstract class AbstractType extends AbstractNode implements Type {
         if (type instanceof ErrorType) {
             return type;
         }
-        return new ErrorType("The index " + this + " of an ArrayAccess can not be " + type,
+        return new ErrorType("The index of an ArrayAccess can not be " + type,
                 node.getLine(), node.getColumn());
     }
 

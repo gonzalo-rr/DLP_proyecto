@@ -45,7 +45,10 @@ R = {
 	(16) expr.type.mustBeBuiltInType()
 	(17) expr.type.mustBeEquals(stmnt.returnType)
 	(18) expr.type.mustBeLogical()
+	     stmnt2*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
+	     stmnt3*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
 	(19) expr.type.mustBeLogical()
+	     stmnt2*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
 	(20) stmnt*.stream().forEach(stmnt -> stmnt.returnType = type.returnType)
 
 }

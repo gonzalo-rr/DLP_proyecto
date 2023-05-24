@@ -146,8 +146,8 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
 
     /**
      * value[[ StructAccess : exp1 -> exp2 ID ]] =
-     * address[[ exp2 ]]
-     * cG.load(exp2.getType().recordField*.get(ID).suffix())
+     * address[[ exp1 ]]
+     * cG.load(exp2.getType().recordField*.get(ID).type.suffix())
      */
     @Override
     public Void visit(StructAccess structAccess, Void param) {
@@ -175,6 +175,8 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
      */
     @Override
     public Void visit(FunctionInvocation functionInvocation, Void param) {
+        functionInvocation.arguments.forEach(arg -> arg.accept(this, param));
+        cG.call(functionInvocation.name.name);
         return null;
     }
 

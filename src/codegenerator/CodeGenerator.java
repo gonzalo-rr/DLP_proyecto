@@ -25,7 +25,7 @@ public class CodeGenerator {
     }
 
     public void write(String string) {
-        out.println(string);
+        out.println("\t" + string);
         out.flush();
     }
 
@@ -33,6 +33,7 @@ public class CodeGenerator {
 
     public void source(String sourceFilename) {
         out.println("#source \"" + sourceFilename + "\"");
+        out.println();
         out.flush();
     }
 
@@ -45,27 +46,27 @@ public class CodeGenerator {
     // Push
 
     public void pushb(char character) {
-        out.println("pushb " + (int) character);
+        out.println("pushb\t" + (int) character);
         out.flush();
     }
 
     public void pushi(int integer) {
-        out.println("pushi " + integer);
+        out.println("pushi\t" + integer);
         out.flush();
     }
 
     public void pushf(double real) {
-        out.println("pushf " + real);
+        out.println("pushf\t" + real);
         out.flush();
     }
 
     public void pusha(int address) {
-        out.println("pusha " + address);
+        out.println("pusha\t" + address);
         out.flush();
     }
 
     public void pushaBp() {
-        out.println("pusha bp");
+        out.println("pusha\tbp");
         out.flush();
     }
 
@@ -86,7 +87,7 @@ public class CodeGenerator {
     // Pop (b, i, f)
 
     public void pop(char suffix) {
-        out.println("popb" + suffix);
+        out.println("pop" + suffix);
         out.flush();
     }
 
@@ -216,17 +217,17 @@ public class CodeGenerator {
     }
 
     public void jmp(String label) {
-        out.println("jmp " + label);
+        out.println("jmp\t" + label);
         out.flush();
     }
 
     public void jz(String label) {
-        out.println("jz " + label);
+        out.println("jz\t" + label);
         out.flush();
     }
 
     public void jnz(String label) {
-        out.println("jnz " + label);
+        out.println("jnz\t" + label);
         out.flush();
     }
 
@@ -238,18 +239,18 @@ public class CodeGenerator {
     }
 
     public void call(String label) {
-        out.println("call " + label);
+        out.println("call\t" + label);
         out.flush();
     }
 
     public void enter(int integer) {
-        out.println("enter " + integer);
+        out.println("enter\t" + integer);
         out.flush();
     }
 
     public void ret(int bytesToReturn, int bytesLocals, int bytesArguments) {
         out.println();
-        out.println("ret " + bytesToReturn + ", " + bytesLocals + ", " + bytesArguments);
+        out.println("ret\t" + bytesToReturn + ", " + bytesLocals + ", " + bytesArguments);
         out.flush();
     }
 
@@ -335,14 +336,19 @@ public class CodeGenerator {
 
     public void logical(String operation) {
         switch (operation) {
-            case "&&": {
+            case "&&" -> {
                 and();
-                break;
             }
-            case "||": {
+            case "||" -> {
                 or();
-                break;
             }
         }
+    }
+
+    public void callMain() {
+        out.println();
+        out.println("call\tmain");
+        out.println("halt");
+        out.flush();
     }
 }

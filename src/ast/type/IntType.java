@@ -26,6 +26,12 @@ public class IntType extends AbstractType implements Type {
         if (type instanceof IntType) {
             return IntType.getInstance();
         }
+        if (type instanceof DoubleType) {
+            return DoubleType.getInstance();
+        }
+        if (type instanceof CharType) {
+            return IntType.getInstance();
+        }
         return super.arithmetic(type, node);
     }
 
