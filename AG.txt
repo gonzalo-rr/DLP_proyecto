@@ -19,7 +19,8 @@ G = {
 	(17) Return: stmnt -> expr
 	(18) IfElse: stmnt1 -> expr stmnt2* stmnt3*
 	(19) While: stmnt1 -> expr stmnt2*
-	(20) FuncDefinition: funcDefinition -> ID type stmnt*
+	(20) PlusEquals: stmnt -> expr1 expr2
+	(21) FuncDefinition: funcDefinition -> ID type stmnt*
 
 }
 
@@ -49,6 +50,7 @@ R = {
 	     stmnt3*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
 	(19) expr.type.mustBeLogical()
 	     stmnt2*.forEach(stmnt -> stmnt.returnType = stmnt1.returnType)
-	(20) stmnt*.stream().forEach(stmnt -> stmnt.returnType = type.returnType)
+	(20) expr1.type.mustBeEquals(expr2.type)
+	(21) stmnt*.stream().forEach(stmnt -> stmnt.returnType = type.returnType)
 
 }

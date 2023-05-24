@@ -8,7 +8,6 @@ import ast.expression.*;
 import ast.statement.*;
 import ast.type.*;
 import visitor.AbstractVisitor;
-import visitor.Visitor;
 
 import java.util.List;
 

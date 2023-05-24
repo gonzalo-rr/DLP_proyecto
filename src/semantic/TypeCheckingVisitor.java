@@ -180,4 +180,14 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
         return null;
     }
 
+    @Override
+    public Void visit(PlusEquals plusEquals, Void param) {
+        super.visit(plusEquals, param);
+        if (!plusEquals.left.getLValue()) {
+            new ErrorType("The left part of an assignment must be a Variable, Array Access or Struct Access", plusEquals.left.getLine(), plusEquals.left.getColumn());
+        }
+        plusEquals.left.setType(plusEquals.left.getType().mustBeEquals(plusEquals.right.getType(), plusEquals));
+        return null;
+    }
+
 }

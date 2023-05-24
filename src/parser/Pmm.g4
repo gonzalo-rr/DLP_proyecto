@@ -87,6 +87,7 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print'
            | OP='return' expression ';' { $ast.add(0, new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
            | func_invocation ';' { $ast.add(0, $func_invocation.ast); }
            | var_definition { $ast.addAll(0, $var_definition.ast); }
+           | plus_equals { $ast.add(0, $plus_equals.ast); }
            ;
 if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' body=statements '}') | body=statements) (else_statement { $elseBody.addAll($else_statement.ast); })? { $ast = new IfElse($condition.ast, $body.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
     ;
@@ -94,6 +95,8 @@ else_statement returns [List<Statement> ast = new ArrayList<Statement>()]: 'else
       ;
 while_loop returns [While ast]: OP='while' expression ':' ('{' st=statements '}' | st=statements) { $ast = new While($expression.ast, $st.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
        ;
+plus_equals returns [PlusEquals ast]: left=expression '+=' right=expression ';' { $ast = new PlusEquals($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
+        ;
 // También es una expresión (si retorna un valor)
 func_invocation returns [FunctionInvocation ast]: ID '(' arguments ')' { $ast = new FunctionInvocation(new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
                  ;

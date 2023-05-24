@@ -25,7 +25,7 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
 
     /**
      * execute[[ FuncDefinition : funcDefinition -> ID type statement* ]]( returnBytes, localBytes, paramBytes ) =
-     * ID<:>
+     * ID <:>
      * <' Parameters>
      * funcDefinition.getType().params.forEach(param -> execute[[ param ]])
      * <' Local Variables>
@@ -131,9 +131,9 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
      * <jz> fail
      * statement2*.forEach(statement => execute[[ statement ]])
      * <jmp> end
-     * <label> fail<:>
+     * <label> fail <:>
      * statement3*.forEach(statement => execute[[ statement ]])
-     * <label> end<:>
+     * <label> end <:>
      */
     @Override
     public Void visit(IfElse ifElse, FuncDefinition param) {
@@ -196,12 +196,12 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
      * execute[[ While : statement -> exp statement* ]]( returnBytes, localBytes, paramBytes ) =
      * String condition = cG.getLabel()
      * String end = cG.getLabel()
-     * <label> condition<:>
+     * <label> condition <:>
      * value[[ exp ]]
      * <jz> end
      * statement*.forEach(statement => execute[[ statement ]]
      * <jmp> condition
-     * <label> end<:>
+     * <label> end <:>
      */
     @Override
     public Void visit(While while_statement, FuncDefinition param) {
@@ -214,6 +214,24 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
         while_statement.body.forEach(statement -> statement.accept(this, param));
         cG.jmp(condition);
         cG.addLabel(end + "");
+        return null;
+    }
+
+    /**
+     * execute[[ PlusEquals : statement -> exp1 exp2 ]]( returnBytes, localBytes, paramBytes ) =
+     * address[[ exp1 ]]
+     * value[[ exp1 ]]
+     * value[[ exp2 ]]
+     * <add> exp1.getType().suffix()
+     * cG.store(exp1.getType().suffix())
+     */
+    @Override
+    public Void visit(PlusEquals plusEquals, FuncDefinition param) {
+        plusEquals.left.accept(addressCGVisitor, null);
+        plusEquals.left.accept(valueCGVisitor, null);
+        plusEquals.right.accept(valueCGVisitor, null);
+        cG.add(plusEquals.left.getType().suffix());
+        cG.store(plusEquals.left.getType().suffix());
         return null;
     }
 

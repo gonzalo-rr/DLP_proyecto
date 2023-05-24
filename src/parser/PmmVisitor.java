@@ -156,6 +156,12 @@ public interface PmmVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_loop(PmmParser.While_loopContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PmmParser#plus_equals}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPlus_equals(PmmParser.Plus_equalsContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PmmParser#func_invocation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
