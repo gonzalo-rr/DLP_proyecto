@@ -93,7 +93,7 @@ public class ValueCGVisitor extends AbstractCGVisitor<Void, Void> {
     }
 
     /**
-     * value[[ LitDouble : exp -> INT_CONSTANT ]] =
+     * value[[ LitInt : exp -> INT_CONSTANT ]] =
      * <pushi> INT_CONSTANT
      */
     @Override
