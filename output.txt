@@ -27,10 +27,21 @@ pusha	bp
 pushi	-2
 addi
 loadi
+pushi	0
+or
 jz	label0
+	' If
+pushf	3.5
+pushi	3
+i2f
+gtf
+jz	label2
 	' Write
 pushb	97
 outb
+jmp	label3
+label2:
+label3:
 jmp	label1
 label0:
 	' Write

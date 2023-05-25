@@ -38,7 +38,7 @@ public class DoubleType extends AbstractType implements Type {
     @Override
     public Type comparison(Type type, ASTNode node) {
         if (type instanceof DoubleType) {
-            return IntType.getInstance();
+            return BoolType.getInstance();
         }
         return super.comparison(type, node);
     }

@@ -1,8 +1,10 @@
 def main():{
     a: bool;
     a = true;
-    if a: {
-        print 'a';
+    if a || false: {
+        if 3.5 > (double) 3: {
+            print 'a';
+        }
     } else: {
         print 'b';
     }
