@@ -81,13 +81,15 @@ statements returns [List<Statement> ast = new ArrayList<Statement>()]: /* epsilo
 
 statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print' separated_expressions ';' { $separated_expressions.ast.stream().forEach((expression) -> $ast.add(new Print(expression, $OP.getLine(), $OP.getCharPositionInLine() + 1))); }
            | OP='input' separated_expressions ';' { $separated_expressions.ast.stream().forEach((expression) -> $ast.add(new Input(expression, $OP.getLine(), $OP.getCharPositionInLine() + 1))); }
-           | left=expression '=' right=expression ';' { $ast.add(0, new Assignment($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn())); }
+           | assignment ';' { $ast.add(0, $assignment.ast); }
            | if_else { $ast.add(0, $if_else.ast); }
            | while_loop { $ast.add(0, $while_loop.ast); }
            | OP='return' expression ';' { $ast.add(0, new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
            | func_invocation ';' { $ast.add(0, $func_invocation.ast); }
            | var_definition { $ast.addAll(0, $var_definition.ast); }
            ;
+assignment returns [Assignment ast]: left=expression '=' right=expression { $ast = new Assignment($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
+        ;
 if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' (statements { $ast = new IfElse($condition.ast, $statements.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }) '}') | (statement { $ast = new IfElse($condition.ast, $statement.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); })) (else_statement { $elseBody.addAll($else_statement.ast); })?
     ;
 else_statement returns [List<Statement> ast = new ArrayList<Statement>()]: 'else' ':' ('{' (statements { $ast.addAll($statements.ast); }) '}' | (statement { $ast.addAll($statement.ast); }))

@@ -4,8 +4,8 @@ G = {
     (2) RecordType: type -> field*
     (3) VarDefinition: varDefinition -> type ID
     (4) RecordField: field -> ID type
-    (X) FunctionType: type1 -> varDefinition* type2
-    (X) Variable: expression -> ID
+    (5) FunctionType: type1 -> varDefinition* type2
+    (6) Variable: expression -> ID
 
 }
 

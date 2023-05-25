@@ -1,24 +1,397 @@
-pushi a
 
-pushi a
-pushi b
-and
-not
+#source "input.2.txt"
 
-and
-not
+	' IntType i (offset 0)
+	' IntType n (offset 2)
+	' IntType j (offset 4)
+	' CharType c (offset 6)
+	' StructType[recordFields=Field[name=integer,type=IntType,offset=0],Field[name=character,type=CharType,offset=2]] pair (offset 7)
+	' ArrayType[size=10,type=ArrayType[size=10,type=IntType]] matrix (offset 10)
 
+call	main
+halt
 
-pushi b
+#line	12
+	p:
+	' Parameters
+	' LocalVariables
+enter	0
+	
 
-pushi a
-pushi b
-and
-not
+ret	0, 0, 0
 
-and
-not
+#line	14
+	f:
+	' Parameters
+	' DoubleType r (offset 6)
+	' IntType e (offset 4)
+	' LocalVariables
+	' DoubleType real (offset -4)
+	' CharType c (offset -5)
+enter	5
+	
 
+#line	17
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pusha	7
+pushi	2
+addi
+loadb
+b2i
+i2f
+pusha	7
+pushi	0
+addi
+loadi
+i2f
+addf
+pusha	bp
+pushi	6
+addi
+loadf
+addf
+pusha	bp
+pushi	4
+addi
+loadi
+i2f
+addf
+storef
 
-and
-not
+#line	18
+	' Assignment
+pusha	bp
+pushi	-5
+addi
+pushb	48
+storeb
+
+#line	19
+pusha	bp
+pushi	-5
+addi
+loadb
+b2i
+
+ret	2, 5, 6
+
+#line	24
+	fill:
+	' Parameters
+	' IntType row (offset 8)
+	' IntType value (offset 6)
+	' IntType increment (offset 4)
+	' LocalVariables
+	' IntType i (offset -2)
+	' IntType inc (offset -4)
+enter	4
+	
+
+#line	26
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	27
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pusha	bp
+pushi	4
+addi
+loadi
+storei
+
+#line	28
+	' While
+label0:
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	10
+lti
+jz	label1
+	' Assignment
+pusha	10
+pusha	bp
+pushi	8
+addi
+loadi
+pushi	20
+muli
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	2
+muli
+addi
+pusha	bp
+pushi	6
+addi
+loadi
+pusha	bp
+pushi	-4
+addi
+loadi
+addi
+storei
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+addi
+storei
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pusha	bp
+pushi	-4
+addi
+loadi
+pusha	bp
+pushi	4
+addi
+loadi
+addi
+storei
+jmp	label0
+label1:
+
+ret	0, 4, 6
+
+#line	35
+	show:
+	' Parameters
+	' IntType row (offset 4)
+	' LocalVariables
+	' IntType i (offset -2)
+enter	2
+	
+
+#line	37
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	38
+	' While
+label2:
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	10
+lti
+jz	label3
+	' Write
+pushb	40
+outb
+	' Write
+pusha	bp
+pushi	4
+addi
+loadi
+outi
+	' Write
+pushb	44
+outb
+	' Write
+pusha	bp
+pushi	-2
+addi
+loadi
+outi
+	' Write
+pushb	41
+outb
+	' Write
+pushb	58
+outb
+	' Write
+pusha	10
+pusha	bp
+pushi	4
+addi
+loadi
+pushi	20
+muli
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	2
+muli
+addi
+loadi
+outi
+	' Write
+pushb	32
+outb
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label2
+label3:
+
+#line	42
+	' Write
+pushb	10
+outb
+
+ret	0, 2, 2
+
+#line	46
+	main:
+	' Parameters
+	' LocalVariables
+	' IntType i (offset -2)
+enter	2
+	
+
+#line	49
+	' Function Invocation
+call	p
+
+#line	50
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	51
+	' Assignment
+pusha	7
+pushi	2
+addi
+pushb	48
+storeb
+
+#line	52
+	' Assignment
+pusha	7
+pushi	0
+addi
+pushb	48
+b2i
+storei
+
+#line	53
+	' Write
+pusha	bp
+pushi	-2
+addi
+loadi
+i2f
+pusha	7
+pushi	2
+addi
+loadb
+b2i
+call	f
+outi
+
+#line	53
+	' Write
+pushb	10
+outb
+
+#line	55
+	' Function Invocation
+pushf	1.3
+pushi	2
+call	f
+popi
+
+#line	57
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pushi	0
+storei
+
+#line	58
+	' Assignment
+pusha	4
+pushi	0
+storei
+
+#line	59
+	' While
+label4:
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	10
+lti
+jz	label5
+	' Function Invocation
+pusha	bp
+pushi	-2
+addi
+loadi
+pusha	4
+loadi
+pushi	1
+call	fill
+	' Function Invocation
+pusha	bp
+pushi	-2
+addi
+loadi
+call	show
+	' Assignment
+pusha	bp
+pushi	-2
+addi
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	1
+addi
+storei
+	' Assignment
+pusha	4
+pusha	bp
+pushi	-2
+addi
+loadi
+pushi	10
+muli
+storei
+jmp	label4
+label5:
+
+ret	0, 2, 0

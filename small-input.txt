@@ -23,7 +23,7 @@ def f(c: char, d: double): {
 def main(): {
 
 }
-"""
+
 
 a: struct {
     b: struct {
@@ -38,4 +38,14 @@ def main():{
         print 'a';
         a = a + 1;
     }
+}
+
+"""
+
+def f(): int{
+    return 1;
+}
+
+def main(): {
+    f();
 }

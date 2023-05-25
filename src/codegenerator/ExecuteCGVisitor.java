@@ -107,16 +107,16 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
     /**
      * execute[[ FunctionInvocation : statement -> exp1 exp2* ]]( returnBytes, localBytes, paramBytes ) =
      * value[[ (Expression) statement ]]
-     * if (!statement.returnType instanceof VoidType))
-     *  <pop> statement.returnType.suffix()
+     * if (!statement.getType() instanceof VoidType))
+     *  <pop> statement.getType().suffix()
      */
     @Override
     public Void visit(FunctionInvocation functionInvocation, FuncDefinition param) {
         cG.write("' Function Invocation");
         functionInvocation.accept(valueCGVisitor, null);
 
-        if (!(functionInvocation.returnType instanceof VoidType)) {
-            cG.pop(functionInvocation.returnType.suffix());
+        if (!(functionInvocation.getType() instanceof VoidType)) {
+            cG.pop(functionInvocation.getType().suffix());
         }
 
         return null;
