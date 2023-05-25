@@ -3,9 +3,12 @@ def main():{
     a = true;
     if a || false: {
         if 3.5 > (double) 3: {
-            print 'a';
+            for i: int; i = 0; i < 3; i+=1; {
+                print 'a';
+            }
         }
     } else: {
         print 'b';
     }
 }
+

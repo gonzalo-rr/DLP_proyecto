@@ -155,6 +155,16 @@ public abstract class AbstractVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(For for_statement, TP param) {
+        for_statement.definition.accept(this, param);
+        for_statement.initialization.accept(this, param);
+        for_statement.condition.accept(this, param);
+        for_statement.increment.accept(this, param);
+        for_statement.body.forEach(statement -> statement.accept(this, param));
+        return null;
+    }
+
+    @Override
     public TR visit(PlusEquals plusEquals, TP param) {
         plusEquals.left.accept(this, param);
         plusEquals.right.accept(this, param);

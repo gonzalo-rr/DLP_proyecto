@@ -186,6 +186,14 @@ public class TypeCheckingVisitor extends AbstractVisitor<Void, Void> implements 
     }
 
     @Override
+    public Void visit(For forStatement, Void param) {
+        super.visit(forStatement, param);
+        forStatement.body.forEach(statement -> statement.setReturnType(forStatement.getReturnType()));
+        forStatement.condition.setType(forStatement.condition.getType().asLogical(forStatement));
+        return null;
+    }
+
+    @Override
     public Void visit(PlusEquals plusEquals, Void param) {
         super.visit(plusEquals, param);
         if (!plusEquals.left.getLValue()) {

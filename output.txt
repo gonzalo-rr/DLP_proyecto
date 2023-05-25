@@ -10,7 +10,7 @@ halt
 	' Parameters
 	' LocalVariables
 	' BoolType a (offset -2)
-enter	2
+enter	4
 	
 
 #line	3
@@ -36,9 +36,37 @@ pushi	3
 i2f
 gtf
 jz	label2
+	' For
+	' IntType i (offset -4)
+	' Assignment
+pusha	bp
+pushi	-4
+addi
+pushi	0
+storei
+label4:
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	3
+lti
+jz	label5
 	' Write
 pushb	97
 outb
+pusha	bp
+pushi	-4
+addi
+pusha	bp
+pushi	-4
+addi
+loadi
+pushi	1
+addi
+storei
+jmp	label4
+label5:
 jmp	label3
 label2:
 label3:
@@ -49,4 +77,4 @@ pushb	98
 outb
 label1:
 
-ret	0, 2, 0
+ret	0, 4, 0

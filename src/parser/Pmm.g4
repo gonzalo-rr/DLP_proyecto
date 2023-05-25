@@ -36,7 +36,9 @@ definition returns [List<Definition> ast = new ArrayList<Definition>()]: var_def
 var_definitions returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: /* epsilon */
                  | var_definition var_definitions { $var_definitions.ast.addAll(0, $var_definition.ast); $ast = $var_definitions.ast; }
                  ;
-var_definition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: ids ':' type ';' { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
+var_definition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]: ids ':' type { $ids.ast.stream().forEach((id) -> $ast.add(new VarDefinition(id.name, $type.ast, id.getLine(), id.getColumn()))); }
+                ;
+unique_var_definition returns [VarDefinition ast]: ID ':' type { $ast = new VarDefinition($ID.text, $type.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
                 ;
 
 // Definición de funciones
@@ -82,13 +84,14 @@ statements returns [List<Statement> ast = new ArrayList<Statement>()]: /* epsilo
 
 statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print' separated_expressions ';' { $separated_expressions.ast.stream().forEach((expression) -> $ast.add(new Print(expression, $OP.getLine(), $OP.getCharPositionInLine() + 1))); }
            | OP='input' separated_expressions ';' { $separated_expressions.ast.stream().forEach((expression) -> $ast.add(new Input(expression, $OP.getLine(), $OP.getCharPositionInLine() + 1))); }
-           | left=expression '=' right=expression ';' { $ast.add(0, new Assignment($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn())); }
+           | assignment ';' { $ast.add(0, $assignment.ast); }
            | if_else { $ast.add(0, $if_else.ast); }
            | while_loop { $ast.add(0, $while_loop.ast); }
+           | for_loop { $ast.add(0, $for_loop.ast); }
            | OP='return' expression ';' { $ast.add(0, new Return($expression.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1)); }
            | func_invocation ';' { $ast.add(0, $func_invocation.ast); }
-           | var_definition { $ast.addAll(0, $var_definition.ast); }
-           | plus_equals { $ast.add(0, $plus_equals.ast); }
+           | var_definition ';' { $ast.addAll(0, $var_definition.ast); }
+           | plus_equals ';' { $ast.add(0, $plus_equals.ast); }
            ;
 if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' (statements { $ast = new IfElse($condition.ast, $statements.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }) '}') | (statement { $ast = new IfElse($condition.ast, $statement.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); })) (else_statement { $elseBody.addAll($else_statement.ast); })?
     ;
@@ -96,7 +99,11 @@ else_statement returns [List<Statement> ast = new ArrayList<Statement>()]: 'else
       ;
 while_loop returns [While ast]: OP='while' expression ':' ('{' (statements { $ast = new While($expression.ast, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }) '}' | (statement { $ast = new While($expression.ast, $statement.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }))
        ;
-plus_equals returns [PlusEquals ast]: left=expression '+=' right=expression ';' { $ast = new PlusEquals($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
+for_loop returns [For ast]: OP='for' unique_var_definition ';' assignment ';' expression ';' inc=statement ('{' (statements { $ast = new For($unique_var_definition.ast, $assignment.ast, $expression.ast, $inc.ast.get(0), $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }) '}' | (statement { $ast = new For($unique_var_definition.ast, $assignment.ast, $expression.ast, $inc.ast.get(0), $statement.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }))
+       ;
+plus_equals returns [PlusEquals ast]: left=expression '+=' right=expression { $ast = new PlusEquals($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
+        ;
+assignment returns [Assignment ast]: left=expression '=' right=expression { $ast = new Assignment($left.ast, $right.ast, $left.ast.getLine(), $left.ast.getColumn()); }
         ;
 // También es una expresión (si retorna un valor)
 func_invocation returns [FunctionInvocation ast]: ID '(' arguments ')' { $ast = new FunctionInvocation(new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }

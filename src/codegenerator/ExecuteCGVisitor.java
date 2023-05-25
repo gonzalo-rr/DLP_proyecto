@@ -192,11 +192,11 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
     }
 
     /**
-     * execute[[ While : statement -> exp statement* ]]( returnBytes, localBytes, paramBytes ) =
+     * execute[[ While : statement -> expression statement* ]]( returnBytes, localBytes, paramBytes ) =
      * String condition = cG.getLabel()
      * String end = cG.getLabel()
      * <label> condition <:>
-     * value[[ exp ]]
+     * value[[ expression ]]
      * <jz> end
      * statement*.forEach(statement => execute[[ statement ]]
      * <jmp> condition
@@ -211,6 +211,36 @@ public class ExecuteCGVisitor extends AbstractCGVisitor<FuncDefinition, Void> {
         while_statement.condition.accept(valueCGVisitor, null);
         cG.jz(end);
         while_statement.body.forEach(statement -> statement.accept(this, param));
+        cG.jmp(condition);
+        cG.addLabel(end + "");
+        return null;
+    }
+
+    /**
+     * execute[[ For : statement1 -> statement2 expression statement3 statement* statement* ]]( returnBytes, localBytes, paramBytes ) =
+     * String condition = cG.getLabel()
+     * String end = cG.getLabel()
+     * execute[[ statement2 ]]
+     * <label> condition <:>
+     * value[[ expression ]]
+     * <jz> end
+     * statement*.forEach(statement => execute[[ statement ]]
+     * execute[[ statement3 ]]
+     * <jmp> condition
+     * <label> end <:>
+     */
+    @Override
+    public Void visit(For for_statement, FuncDefinition param) {
+        cG.write("' For");
+        String condition = cG.getLabel();
+        String end = cG.getLabel();
+        for_statement.definition.accept(this, param);
+        for_statement.initialization.accept(this, param);
+        cG.addLabel(condition + "");
+        for_statement.condition.accept(valueCGVisitor, null);
+        cG.jz(end);
+        for_statement.body.forEach(statement -> statement.accept(this, param));
+        for_statement.increment.accept(this, param);
         cG.jmp(condition);
         cG.addLabel(end + "");
         return null;

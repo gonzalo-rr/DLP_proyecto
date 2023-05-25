@@ -54,6 +54,12 @@ public interface PmmVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVar_definition(PmmParser.Var_definitionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PmmParser#unique_var_definition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitUnique_var_definition(PmmParser.Unique_var_definitionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PmmParser#func_definition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -156,11 +162,23 @@ public interface PmmVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhile_loop(PmmParser.While_loopContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PmmParser#for_loop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_loop(PmmParser.For_loopContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PmmParser#plus_equals}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPlus_equals(PmmParser.Plus_equalsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PmmParser#assignment}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment(PmmParser.AssignmentContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PmmParser#func_invocation}.
 	 * @param ctx the parse tree

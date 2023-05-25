@@ -143,6 +143,12 @@ public abstract class AbstractCGVisitor<TP, TR> implements Visitor<TP, TR> {
     }
 
     @Override
+    public TR visit(For for_statement, TP param) {
+        throw new IllegalStateException("It is not possible to generate code " + this.getClass()
+                + " for " + for_statement);
+    }
+
+    @Override
     public TR visit(ArrayType arrayType, TP param) {
         throw new IllegalStateException("It is not possible to generate code " + this.getClass() + " for " + arrayType);
     }

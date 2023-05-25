@@ -59,6 +59,8 @@ public interface Visitor<TP, TR> {
 
     public TR visit(While while_statement, TP param);
 
+    public TR visit(For for_statement, TP param);
+
     public TR visit(PlusEquals plusEquals, TP param);
 
     // Types

@@ -28,6 +28,9 @@ public class Main {
 		PmmParser parser = new PmmParser(tokens);	
 		ASTNode ast = parser.program().ast;
 
+		IntrospectorModel model=new IntrospectorModel("Program", ast);
+		new IntrospectorView("Introspector", model);
+
 		ast.accept(new IdentificationVisitor(), null);
 		ast.accept(new TypeCheckingVisitor(),null);
 
