@@ -88,11 +88,11 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]: OP='print'
            | func_invocation ';' { $ast.add(0, $func_invocation.ast); }
            | var_definition { $ast.addAll(0, $var_definition.ast); }
            ;
-if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' body=statements '}') | body=statements) (else_statement { $elseBody.addAll($else_statement.ast); })? { $ast = new IfElse($condition.ast, $body.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+if_else returns [IfElse ast] locals [List<Statement> elseBody = new ArrayList<Statement>()]: OP='if' condition=expression ':' (('{' (statements { $ast = new IfElse($condition.ast, $statements.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); }) '}') | (statement { $ast = new IfElse($condition.ast, $statement.ast, $elseBody, $OP.getLine(), $OP.getCharPositionInLine() + 1); })) (else_statement { $elseBody.addAll($else_statement.ast); })?
     ;
-else_statement returns [List<Statement> ast = new ArrayList<Statement>()]: 'else' ':' ('{' body=statements '}' | body=statements) { $ast.addAll($body.ast); }
+else_statement returns [List<Statement> ast = new ArrayList<Statement>()]: 'else' ':' ('{' (statements { $ast.addAll($statements.ast); }) '}' | (statement { $ast.addAll($statement.ast); }))
       ;
-while_loop returns [While ast]: OP='while' expression ':' ('{' st=statements '}' | st=statements) { $ast = new While($expression.ast, $st.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }
+while_loop returns [While ast]: OP='while' expression ':' ('{' (statements { $ast = new While($expression.ast, $statements.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }) '}' | (statement { $ast = new While($expression.ast, $statement.ast, $OP.getLine(), $OP.getCharPositionInLine() + 1); }))
        ;
 // También es una expresión (si retorna un valor)
 func_invocation returns [FunctionInvocation ast]: ID '(' arguments ')' { $ast = new FunctionInvocation(new Var($ID.text, $ID.getLine(), $ID.getCharPositionInLine() + 1), $arguments.ast, $ID.getLine(), $ID.getCharPositionInLine() + 1); }
