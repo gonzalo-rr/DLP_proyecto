@@ -1,52 +1,24 @@
+pushi a
 
-#source "small-input.txt"
+pushi a
+pushi b
+and
+not
 
-	' StructType[recordFields=Field[name=b,type=StructType[recordFields=Field[name=c,type=IntType,offset=0]],offset=0]] a (offset 0)
+and
+not
 
-call	main
-halt
 
-#line	34
-	main:
-	' Parameters
-	' LocalVariables
-	' IntType a (offset -2)
-enter	2
-	
+pushi b
 
-#line	36
-	' Assignment
-pusha	bp
-pushi	-2
-addi
-pushi	0
-storei
+pushi a
+pushi b
+and
+not
 
-#line	37
-	' While
-label0:
-pusha	bp
-pushi	-2
-addi
-loadi
-pushi	10
-lti
-jz	label1
-	' Write
-pushb	97
-outb
-	' Assignment
-pusha	bp
-pushi	-2
-addi
-pusha	bp
-pushi	-2
-addi
-loadi
-pushi	1
-addi
-storei
-jmp	label0
-label1:
+and
+not
 
-ret	0, 2, 0
+
+and
+not
